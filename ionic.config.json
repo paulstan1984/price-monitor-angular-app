@@ -1,0 +1,7 @@
+{
+  "name": "PriceMonitorApp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
