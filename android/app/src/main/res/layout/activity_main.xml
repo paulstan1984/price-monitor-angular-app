@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
-    <WebView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    android:background="@drawable/ic_launcher_background"
+    android:backgroundTintMode="multiply"
+    android:visibility="visible"
+    tools:context=".MainActivity"
+    tools:visibility="visible"/>
