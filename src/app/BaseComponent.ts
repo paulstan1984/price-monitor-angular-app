@@ -64,10 +64,10 @@ export class BaseComponent {
   }
 
   store_id = 'store_id';
-  getCurrentStore(){
+  getCurrentStore(): string{
     return localStorage.getItem(this.store_id);
   }
-  setCurrentStore(store_id: number){
+  setCurrentStore(store_id: string){
     return localStorage.setItem(this.store_id, store_id.toString());
   }
 

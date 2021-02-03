@@ -14,47 +14,20 @@
   </ion-header>
 
   <ion-toolbar>
-    <ion-searchbar placeholder="Product"></ion-searchbar>
+    <ion-searchbar (ionChange)="searchProducts($event)" [(ngModel)]="prodName" placeholder="Product"></ion-searchbar>
     <ion-buttons slot="end">
-			<ion-button>
+			<ion-button (click) = "addProduct(prodName)">
 				<ion-icon name="add-circle-outline"></ion-icon>
 			</ion-button>
 		</ion-buttons>
   </ion-toolbar>
-
+  
   <ion-list>
-    <ion-item>
-      <ion-label>Product Name</ion-label>
+    <ion-item *ngFor="let prod of products">
+      <ion-label>{{prod.name}}</ion-label>
       <ion-checkbox slot="end"></ion-checkbox>
     </ion-item>
-    <ion-item>
-      <ion-label>Product Name</ion-label>
-      <ion-checkbox slot="end"></ion-checkbox>
-    </ion-item>
-    <ion-item>
-      <ion-label>Product Name</ion-label>
-      <ion-checkbox slot="end"></ion-checkbox>
-    </ion-item>
-    <ion-item>
-      <ion-label>Product Name</ion-label>
-      <ion-checkbox slot="end"></ion-checkbox>
-    </ion-item>
-    <ion-item>
-      <ion-label>Product Name</ion-label>
-      <ion-checkbox slot="end"></ion-checkbox>
-    </ion-item>
-    <ion-item>
-      <ion-label>Product Name</ion-label>
-      <ion-checkbox slot="end"></ion-checkbox>
-    </ion-item>
-
-
   </ion-list>
-
-  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
-    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
-    </ion-infinite-scroll-content>
-  </ion-infinite-scroll>
 
 </ion-content>
 
@@ -67,7 +40,7 @@
   </ion-label>
 
   <ion-toolbar>
-    <ion-select placeholder="Select the store" *ngIf="stores && stores.length>0">
+    <ion-select *ngIf="stores && stores.length>0" (ionChange)="updateCurrentStore($event)" [(ngModel)]="selectedStore">
       <ion-select-option *ngFor="let store of stores" [value]="store.id">{{store.name}}</ion-select-option>
     </ion-select>
     <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
