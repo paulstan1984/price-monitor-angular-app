@@ -59,6 +59,13 @@
 </ion-content>
 
 <ion-footer>
+
+  <ion-label color="danger" *ngIf="errorObj && errorObj.GlobalMessage">
+    <p class="ion-padding-horizontal ion-text-center">
+      {{errorObj.GlobalMessage}}
+    </p>
+  </ion-label>
+
   <ion-toolbar>
     <ion-select placeholder="Select the store" *ngIf="stores && stores.length>0">
       <ion-select-option *ngFor="let store of stores" [value]="store.id">{{store.name}}</ion-select-option>

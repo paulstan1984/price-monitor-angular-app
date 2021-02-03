@@ -13,83 +13,13 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-list>
-    <ion-item>
-      <ion-label>Product Name</ion-label>
-      <ion-input placeholder="Price" type="number"></ion-input>
-      <ion-checkbox slot="end"></ion-checkbox>
+  <ion-list *ngIf = "shoppingList && shoppingList?.items?.lenght > 0">
+    <ion-item *ngFor="let item of shoppingList?.items" [hidden] = "!item.checked || showSelected">
+      <ion-label>{{item?.product?.name}}</ion-label>
+      <ion-input placeholder="Price" type="number" [(ngModel)]="item.price"></ion-input>
+      <ion-checkbox slot="end" [(ngModel)]="item.checked"></ion-checkbox>
     </ion-item>
-    <ion-item>
-      <ion-label>Product Name</ion-label>
-      <ion-input placeholder="Price" type="number"></ion-input>
-      <ion-checkbox slot="end"></ion-checkbox>
-    </ion-item>
-    <ion-item>
-      <ion-label>Product Name</ion-label>
-      <ion-input placeholder="Price" type="number"></ion-input>
-      <ion-checkbox slot="end"></ion-checkbox>
-    </ion-item>
-    <ion-item>
-      <ion-label>Product Name</ion-label>
-      <ion-input placeholder="Price" type="number"></ion-input>
-      <ion-checkbox slot="end"></ion-checkbox>
-    </ion-item>
-    <ion-item>
-      <ion-label>Product Name</ion-label>
-      <ion-input placeholder="Price" type="number"></ion-input>
-      <ion-checkbox slot="end"></ion-checkbox>
-    </ion-item>
-    <ion-item>
-      <ion-label>Product Name</ion-label>
-      <ion-input placeholder="Price" type="number"></ion-input>
-      <ion-checkbox slot="end"></ion-checkbox>
-    </ion-item>
-
-    <ion-item>
-      <ion-label>Product Name</ion-label>
-      <ion-input placeholder="Price" type="number"></ion-input>
-      <ion-checkbox slot="end"></ion-checkbox>
-    </ion-item>
-    <ion-item>
-      <ion-label>Product Name</ion-label>
-      <ion-input placeholder="Price" type="number"></ion-input>
-      <ion-checkbox slot="end"></ion-checkbox>
-    </ion-item>
-    <ion-item>
-      <ion-label>Product Name</ion-label>
-      <ion-input placeholder="Price" type="number"></ion-input>
-      <ion-checkbox slot="end"></ion-checkbox>
-    </ion-item>
-    <ion-item>
-      <ion-label>Product Name</ion-label>
-      <ion-input placeholder="Price" type="number"></ion-input>
-      <ion-checkbox slot="end"></ion-checkbox>
-    </ion-item>
-    <ion-item>
-      <ion-label>Product Name</ion-label>
-      <ion-input placeholder="Price" type="number"></ion-input>
-      <ion-checkbox slot="end"></ion-checkbox>
-    </ion-item>
-    <ion-item>
-      <ion-label>Product Name</ion-label>
-      <ion-input placeholder="Price" type="number"></ion-input>
-      <ion-checkbox slot="end"></ion-checkbox>
-    </ion-item>
-    <ion-item>
-      <ion-label>Product Name</ion-label>
-      <ion-input placeholder="Price" type="number"></ion-input>
-      <ion-checkbox slot="end"></ion-checkbox>
-    </ion-item>
-    <ion-item>
-      <ion-label>Product Name</ion-label>
-      <ion-input placeholder="Price" type="number"></ion-input>
-      <ion-checkbox slot="end"></ion-checkbox>
-    </ion-item>
-    <ion-item>
-      <ion-label>Product Name</ion-label>
-      <ion-input placeholder="Price" type="number"></ion-input>
-      <ion-checkbox slot="end"></ion-checkbox>
-    </ion-item>
+    
   </ion-list>
 
   
@@ -98,10 +28,10 @@
 <ion-footer>
   <ion-toolbar>
     <ion-title size="small">
-      Show not selected
+      Show selected
     </ion-title>
     <ion-buttons slot="end">
-      <ion-toggle slot="end"></ion-toggle>
+      <ion-toggle [(ngModel)]="showSelected" slot="end" (ionChange)="toggleShowSelected($event)"></ion-toggle>
     </ion-buttons>
 
     <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>

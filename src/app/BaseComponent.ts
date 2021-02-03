@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { NgForm } from "@angular/forms";
+import { ShoppingList } from "./models/ShoppingList";
 
 export interface ErrorObject {
   GlobalMessage: string;
@@ -60,5 +61,30 @@ export class BaseComponent {
         DetailedMessages: {}
       } as ErrorObject;
     }
+  }
+
+  store_id = 'store_id';
+  getCurrentStore(){
+    return localStorage.getItem(this.store_id);
+  }
+  setCurrentStore(store_id: number){
+    return localStorage.setItem(this.store_id, store_id.toString());
+  }
+
+  shopping_list = 'shopping_list';
+  getShoppingList() : ShoppingList{
+    return JSON.parse(localStorage.getItem(this.shopping_list)) as ShoppingList;
+  }
+  setShoppingList(list: ShoppingList){
+    localStorage.setItem(this.shopping_list, JSON.stringify(list));
+  }
+
+  show_selected = 'show_selected';
+  getShowSelected() {
+    return localStorage.getItem(this.show_selected) == 'true';
+  }
+
+  setShowSelected(value: boolean) {
+    return localStorage.setItem(this.show_selected, value ? 'true': 'false');
   }
 }
