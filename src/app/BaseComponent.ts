@@ -1,7 +1,8 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { NgForm } from "@angular/forms";
-import { ShoppingList } from "./models/ShoppingList";
+import { Product } from "./models/Product";
+import { ShoppingList, ShoppingListItem } from "./models/ShoppingList";
 
 export interface ErrorObject {
   GlobalMessage: string;
@@ -64,19 +65,51 @@ export class BaseComponent {
   }
 
   store_id = 'store_id';
-  getCurrentStore(): string{
+  getCurrentStore(): string {
     return localStorage.getItem(this.store_id);
   }
-  setCurrentStore(store_id: string){
+  setCurrentStore(store_id: string) {
     return localStorage.setItem(this.store_id, store_id.toString());
   }
 
   shopping_list = 'shopping_list';
-  getShoppingList() : ShoppingList{
+  getShoppingList(): ShoppingList {
     return JSON.parse(localStorage.getItem(this.shopping_list)) as ShoppingList;
   }
-  setShoppingList(list: ShoppingList){
+  setShoppingList(list: ShoppingList) {
     localStorage.setItem(this.shopping_list, JSON.stringify(list));
+  }
+  addToShoppingList(p: Product) {
+    let list = this.getShoppingList();
+    if (!list) {
+      list = { items: [] } as ShoppingList;
+    }
+
+    list.items.push({
+      product: p,
+      checked: false,
+      price: 0
+    } as ShoppingListItem);
+
+    this.setShoppingList(list);
+  }
+
+  removeFromShoppingList(p: Product) {
+    let list = this.getShoppingList();
+    if (!list) {
+      list = { items: [] } as ShoppingList;
+    }
+
+    let i=0;
+    while(i<list.items.length){
+      if (list.items[i].product.id == p.id) {
+        list.items.splice(i, 1);
+      } else {
+        i++;
+      }
+    }
+
+    this.setShoppingList(list);
   }
 
   show_selected = 'show_selected';
@@ -85,6 +118,6 @@ export class BaseComponent {
   }
 
   setShowSelected(value: boolean) {
-    return localStorage.setItem(this.show_selected, value ? 'true': 'false');
+    return localStorage.setItem(this.show_selected, value ? 'true' : 'false');
   }
 }

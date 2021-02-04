@@ -15,11 +15,15 @@ export class ShoppingListPage  extends BaseComponent {
   constructor() { 
     super();
 
-    this.shoppingList = this.getShoppingList();
-    this.showSelected = this.getShowSelected();
+    this.ionViewWillEnter();
   }
 
   toggleShowSelected(event: any){
     this.setShowSelected(event.detail.checked);
+  }
+
+  ionViewWillEnter(){
+    this.shoppingList = this.getShoppingList();
+    this.showSelected = this.getShowSelected();
   }
 }

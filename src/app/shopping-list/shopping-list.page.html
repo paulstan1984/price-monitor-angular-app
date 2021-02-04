@@ -13,8 +13,8 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-list *ngIf = "shoppingList && shoppingList?.items?.lenght > 0">
-    <ion-item *ngFor="let item of shoppingList?.items" [hidden] = "!item.checked || showSelected">
+  <ion-list>
+    <ion-item *ngFor="let item of shoppingList.items" [hidden] = "!(!item.checked || showSelected)">
       <ion-label>{{item?.product?.name}}</ion-label>
       <ion-input placeholder="Price" type="number" [(ngModel)]="item.price"></ion-input>
       <ion-checkbox slot="end" [(ngModel)]="item.checked"></ion-checkbox>
