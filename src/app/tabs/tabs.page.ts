@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Plugins } from '@capacitor/core';
 import { AlertController } from '@ionic/angular';
+import { environment } from 'src/environments/environment';
 import { BaseComponent } from '../BaseComponent';
 import { Price } from '../models/Price';
 import { ShoppingList } from '../models/ShoppingList';
@@ -18,6 +19,8 @@ export class TabsPage extends BaseComponent {
     private alertController: AlertController,
     private priceService: PricesService) {
     super();
+
+    this.priceService.setAuthToken(environment.AuthToken);
   }
 
   async Exit() {
