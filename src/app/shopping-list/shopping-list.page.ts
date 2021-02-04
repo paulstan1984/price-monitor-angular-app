@@ -28,6 +28,10 @@ export class ShoppingListPage extends BaseComponent {
     this.showSelected = this.getShowSelected();
   }
 
+  saveShoppingList() {
+    this.setShoppingList(this.shoppingList);
+  }
+
   async newList() {
     const alert = await this.alertController.create({
       cssClass: 'my-custom-class',

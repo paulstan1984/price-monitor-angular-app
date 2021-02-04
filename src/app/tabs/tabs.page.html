@@ -1,5 +1,11 @@
 <ion-tabs>
-
+  <ion-label color="danger" *ngIf="errorObj && errorObj.GlobalMessage">
+    <p class="ion-padding-horizontal ion-text-center">
+      {{errorObj.GlobalMessage}}
+    </p>
+  </ion-label>
+  <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
+  
   <ion-tab-bar slot="bottom">
     <ion-tab-button tab="products">
       <ion-icon name="add-circle-outline"></ion-icon>

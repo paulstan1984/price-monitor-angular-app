@@ -67,6 +67,23 @@ export class PricesService extends ServiceBase {
       );
   }
 
+  public buy(prices: Price[], startCallback: () => void, endCallback: () => void, errorHandler: (error: HttpErrorResponse) => void): Observable<Price[]> {
+
+    startCallback();
+
+    let url = this.ApiURL;
+
+    return this.http
+      .patch<Price[]>(url, prices,  { headers: this.headers })
+      .pipe(
+        catchError((error: HttpErrorResponse, caught: Observable<Price[]>) => {
+          endCallback();
+          errorHandler(error);
+          return caught;
+        })
+      );
+  }
+
   public delete(price: Price, startCallback: () => void, endCallback: () => void, errorHandler: (error: HttpErrorResponse) => void): Observable<any> {
 
     startCallback();

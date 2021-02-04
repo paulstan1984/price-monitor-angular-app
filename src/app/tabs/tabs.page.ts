@@ -3,6 +3,8 @@ import { Plugins } from '@capacitor/core';
 import { AlertController } from '@ionic/angular';
 import { BaseComponent } from '../BaseComponent';
 import { Price } from '../models/Price';
+import { ShoppingList } from '../models/ShoppingList';
+import { PricesService } from '../services/Prices.service';
 const { App } = Plugins;
 
 @Component({
@@ -12,7 +14,9 @@ const { App } = Plugins;
 })
 export class TabsPage extends BaseComponent {
 
-  constructor(private alertController: AlertController) {
+  constructor(
+    private alertController: AlertController,
+    private priceService: PricesService) {
     super();
   }
 
@@ -65,6 +69,18 @@ export class TabsPage extends BaseComponent {
       });
     }
 
-    
+    if (prices && prices.length) {
+      this.priceService.buy(prices, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+        .subscribe(_ => {
+          this.setLoading(false);
+          this.setShoppingList({ items: [] } as ShoppingList);
+        })
+    } else {
+      const alert = this.alertController.create({
+        cssClass: 'my-custom-class',
+        header: 'Select at least a product?',
+        buttons: [ 'Ok']
+      }).then(w => w.present());
+    }
   }
 }
