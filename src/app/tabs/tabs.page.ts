@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Plugins } from '@capacitor/core';
+import { AlertController } from '@ionic/angular';
 const { App } = Plugins;
 
 @Component({
@@ -9,11 +10,20 @@ const { App } = Plugins;
 })
 export class TabsPage {
 
-  constructor() {}
+  constructor(private alertController: AlertController) {}
 
-  public Exit() {
-    if(confirm('Exit?')){
-      App.exitApp();
-    }
+  async Exit() {
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Exit?',
+      buttons: [{
+        text: 'Yes',
+        handler: () => {
+          App.exitApp();
+        }
+      }, 'No']
+    });
+
+    alert.present();
   }
 }
