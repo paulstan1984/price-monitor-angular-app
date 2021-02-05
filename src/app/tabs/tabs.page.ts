@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { Plugins } from '@capacitor/core';
 import { AlertController } from '@ionic/angular';
 import { environment } from 'src/environments/environment';
@@ -17,7 +18,8 @@ export class TabsPage extends BaseComponent {
 
   constructor(
     private alertController: AlertController,
-    private priceService: PricesService) {
+    private priceService: PricesService,
+    private router: Router) {
     super();
 
     this.priceService.setAuthToken(environment.AuthToken);
@@ -77,6 +79,7 @@ export class TabsPage extends BaseComponent {
         .subscribe(_ => {
           this.setLoading(false);
           this.setShoppingList({ items: [] } as ShoppingList);
+          this.router.navigate(['tabs/products']);
         })
     } else {
       const alert = this.alertController.create({
