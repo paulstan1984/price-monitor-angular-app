@@ -74,12 +74,34 @@ export class BaseComponent {
 
   shopping_list = 'shopping_list';
   getShoppingList(): ShoppingList {
+    let strList = localStorage.getItem(this.shopping_list);
+
+    if (!strList || strList == '') {
+      return { items: [] } as ShoppingList;
+    }
+
     return JSON.parse(localStorage.getItem(this.shopping_list)) as ShoppingList;
   }
   setShoppingList(list: ShoppingList) {
     localStorage.setItem(this.shopping_list, JSON.stringify(list));
   }
+  isInShoppingList(p: Product) {
+    let shoppingList = this.getShoppingList();
+
+    for (let i = 0; i < shoppingList.items.length; i++) {
+      if (shoppingList.items[i].product.id == p.id) {
+        return true;
+      }
+    }
+
+    return false;
+  }
   addToShoppingList(p: Product) {
+
+    if (this.isInShoppingList(p)) {
+      return;
+    }
+
     let list = this.getShoppingList();
     if (!list) {
       list = { items: [] } as ShoppingList;
@@ -88,7 +110,7 @@ export class BaseComponent {
     list.items.push({
       product: p,
       checked: false,
-      price: 0
+      price: undefined
     } as ShoppingListItem);
 
     this.setShoppingList(list);
@@ -100,8 +122,8 @@ export class BaseComponent {
       list = { items: [] } as ShoppingList;
     }
 
-    let i=0;
-    while(i<list.items.length){
+    let i = 0;
+    while (i < list.items.length) {
       if (list.items[i].product.id == p.id) {
         list.items.splice(i, 1);
       } else {

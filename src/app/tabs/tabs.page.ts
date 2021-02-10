@@ -7,7 +7,6 @@ import { BaseComponent } from '../BaseComponent';
 import { Price } from '../models/Price';
 import { ShoppingList } from '../models/ShoppingList';
 import { PricesService } from '../services/Prices.service';
-const { App } = Plugins;
 
 @Component({
   selector: 'app-tabs',
@@ -23,21 +22,6 @@ export class TabsPage extends BaseComponent {
     super();
 
     this.priceService.setAuthToken(environment.AuthToken);
-  }
-
-  async Exit() {
-    const alert = await this.alertController.create({
-      cssClass: 'my-custom-class',
-      header: 'Exit?',
-      buttons: [{
-        text: 'Yes',
-        handler: () => {
-          App.exitApp();
-        }
-      }, 'No']
-    });
-
-    alert.present();
   }
 
   async Buy() {

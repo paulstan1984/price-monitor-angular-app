@@ -36,8 +36,12 @@ export class ProductsPage extends BaseComponent {
     this.storesService.setAuthToken(environment.AuthToken);
     this.categoriesService.setAuthToken(environment.AuthToken);
     this.productsService.setAuthToken(environment.AuthToken);
-    
+
     this.loadMetaData();
+  }
+
+  ionViewDidEnter() {
+    this.loadProducts(this.prodName);
   }
 
   loadMetaData(){
@@ -93,6 +97,11 @@ export class ProductsPage extends BaseComponent {
       .subscribe(searchResponse => {
         this.setLoading(false);
         this.products = searchResponse.results;
+        this.products.forEach(p => {
+          if(this.isInShoppingList(p)){
+            p.Checked = true;
+          }
+        });
       })
   }
 

@@ -16,14 +16,18 @@ export class ShoppingListPage extends BaseComponent {
   constructor(private alertController: AlertController) {
     super();
 
-    this.ionViewWillEnter();
+
+  }
+
+  ionViewDidEnter() {
+    this.loadMetadata();
   }
 
   toggleShowSelected(event: any) {
     this.setShowSelected(event.detail.checked);
   }
 
-  ionViewWillEnter() {
+  loadMetadata() {
     this.shoppingList = this.getShoppingList();
     this.showSelected = this.getShowSelected();
   }

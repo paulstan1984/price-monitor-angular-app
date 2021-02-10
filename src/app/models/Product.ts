@@ -11,4 +11,6 @@ export interface Product extends EditableObject {
     avgPrice: number;
     created_at: Date;
     updated_at: Date;
+
+    Checked: boolean;
 }
