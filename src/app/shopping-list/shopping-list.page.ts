@@ -56,12 +56,20 @@ export class ShoppingListPage extends BaseComponent {
           {
             text: 'Cancel',
             role: 'cancel',
-            cssClass: 'secondary'
+            cssClass: 'secondary',
+            handler: () => {
+              item.checked = false;
+            }
           }, {
             text: 'Ok',
             handler: (inputs) => {
-              item.price = inputs.price;
-              this.updateShoppingListItem(item);
+              if (inputs.price > 0) {
+                item.price = inputs.price;
+                this.updateShoppingListItem(item);
+              }
+              else {
+                item.checked = false;
+              }
             }
           }
         ]
