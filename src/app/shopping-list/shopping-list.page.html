@@ -21,7 +21,9 @@
     <ion-item *ngFor="let item of shoppingList?.items" [hidden]="!(!item.checked || showSelected)">
       <ion-label>{{item?.product?.name}}</ion-label>
       <ion-input placeholder="Price" type="number" [(ngModel)]="item.price" (ionChange)="saveShoppingList()"></ion-input>
-      <ion-checkbox slot="end" [(ngModel)]="item.checked" (ionChange)="saveShoppingList()"></ion-checkbox>
+
+      <ion-button color="light" slot="end" (click)="remove(item)"><ion-icon name="trash-bin-outline"></ion-icon></ion-button>
+      <ion-checkbox slot="end" [(ngModel)]="item.checked" (ionChange)="changeCheck(item)"></ion-checkbox>
     </ion-item>
 
   </ion-list>

@@ -134,6 +134,21 @@ export class BaseComponent {
     this.setShoppingList(list);
   }
 
+  updateShoppingListItem(item: ShoppingListItem) { 
+    let list = this.getShoppingList();
+    if (!list) {
+      list = { items: [] } as ShoppingList;
+    }
+
+    list.items.forEach(i => {
+      if(i.product.id == item.product.id){
+        i.price = item.price;
+      }
+    });
+
+    this.setShoppingList(list);
+  }
+
   show_selected = 'show_selected';
   getShowSelected() {
     return localStorage.getItem(this.show_selected) == 'true';
