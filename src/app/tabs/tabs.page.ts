@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Plugins } from '@capacitor/core';
 import { AlertController } from '@ionic/angular';
 import { environment } from 'src/environments/environment';
 import { BaseComponent } from '../BaseComponent';
@@ -63,7 +62,18 @@ export class TabsPage extends BaseComponent {
         .subscribe(_ => {
           this.setLoading(false);
           this.setShoppingList({ items: [] } as ShoppingList);
-          this.router.navigate(['tabs/products']);
+
+          this.alertController.create({
+            cssClass: 'my-custom-class',
+            header: 'Products purchased!',
+            buttons: [{
+              text: 'Ok',
+              handler: () => {
+                this.router.navigate(['tabs/products']);
+              }
+            }]
+          }).then(a=>a.present());
+          
         })
     } else {
       const alert = this.alertController.create({
