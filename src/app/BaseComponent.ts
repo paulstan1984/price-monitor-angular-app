@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { NgForm } from "@angular/forms";
+import { AlertController } from "@ionic/angular";
 import { Product } from "./models/Product";
 import { ShoppingList, ShoppingListItem } from "./models/ShoppingList";
 
@@ -134,14 +135,14 @@ export class BaseComponent {
     this.setShoppingList(list);
   }
 
-  updateShoppingListItem(item: ShoppingListItem) { 
+  updateShoppingListItem(item: ShoppingListItem) {
     let list = this.getShoppingList();
     if (!list) {
       list = { items: [] } as ShoppingList;
     }
 
     list.items.forEach(i => {
-      if(i.product.id == item.product.id){
+      if (i.product.id == item.product.id) {
         i.price = item.price;
       }
     });
@@ -156,5 +157,14 @@ export class BaseComponent {
 
   setShowSelected(value: boolean) {
     return localStorage.setItem(this.show_selected, value ? 'true' : 'false');
+  }
+
+  showMessage(header: string, message: string, alertController: AlertController) {
+    alertController.create({
+      cssClass: 'my-custom-class',
+      header: header,
+      message: message,
+      buttons: ['Ok']
+    }).then(a => a.present());
   }
 }

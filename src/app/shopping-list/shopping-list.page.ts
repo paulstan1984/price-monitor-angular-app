@@ -1,8 +1,10 @@
 import { ThrowStmt } from '@angular/compiler';
 import { Component } from '@angular/core';
 import { AlertController } from '@ionic/angular';
+import { environment } from 'src/environments/environment';
 import { BaseComponent } from '../BaseComponent';
 import { ShoppingList, ShoppingListItem } from '../models/ShoppingList';
+import { ShoppingListService } from '../services/ShoppingList.service';
 
 @Component({
   selector: 'app-shopping-list',
@@ -14,10 +16,12 @@ export class ShoppingListPage extends BaseComponent {
   shoppingList: ShoppingList | undefined;
   showSelected = false;
 
-  constructor(private alertController: AlertController) {
+  constructor(
+    private alertController: AlertController,
+    private shoppingListService: ShoppingListService) {
     super();
 
-
+    this.shoppingListService.setAuthToken(environment.AuthToken);
   }
 
   ionViewDidEnter() {
@@ -115,7 +119,18 @@ export class ShoppingListPage extends BaseComponent {
       buttons: [{
         text: 'Yes',
         handler: () => {
-          
+          this.shoppingListService.get(() => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+            .subscribe(list => {
+              list.items.forEach(item => {
+                if(!this.isInShoppingList(item.product)) {
+                  this.addToShoppingList(item.product);
+                }
+              });
+              this.shoppingList = this.getShoppingList();
+
+              this.showMessage('Sync list', 'The list was merged with the data from server!', this.alertController);
+              this.setLoading(false);
+            })
         }
       }, 'No']
     }).then(p=>p.present());
@@ -129,7 +144,12 @@ export class ShoppingListPage extends BaseComponent {
       buttons: [{
         text: 'Yes',
         handler: () => {
-          
+          let list = this.getShoppingList();
+          this.shoppingListService.save(list, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+          .subscribe(() => {
+            this.showMessage('Push list', 'The list was stored to server!', this.alertController);
+            this.setLoading(false);
+          })
         }
       }, 'No']
     }).then(p=>p.present());
@@ -143,7 +163,13 @@ export class ShoppingListPage extends BaseComponent {
       buttons: [{
         text: 'Yes',
         handler: () => {
-          
+          this.shoppingListService.get(() => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+          .subscribe(list => {
+            this.setShoppingList(list);
+            this.shoppingList = this.getShoppingList();
+            this.showMessage('Pop list', 'The list was loaded from server!', this.alertController);
+            this.setLoading(false);
+          })
         }
       }, 'No']
     }).then(p=>p.present());
