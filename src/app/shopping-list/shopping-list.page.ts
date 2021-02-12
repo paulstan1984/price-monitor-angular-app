@@ -106,4 +106,46 @@ export class ShoppingListPage extends BaseComponent {
 
     alert.present();
   }
+
+  syncList() {
+    this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Sync?',
+      message: 'Sync the shopping list.',
+      buttons: [{
+        text: 'Yes',
+        handler: () => {
+          
+        }
+      }, 'No']
+    }).then(p=>p.present());
+  }
+
+  pushList() {
+    this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Push?',
+      message: 'Push the shopping list.',
+      buttons: [{
+        text: 'Yes',
+        handler: () => {
+          
+        }
+      }, 'No']
+    }).then(p=>p.present());
+  }
+
+  popList() {
+    this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Pop?',
+      message: 'Pop the shopping list.',
+      buttons: [{
+        text: 'Yes',
+        handler: () => {
+          
+        }
+      }, 'No']
+    }).then(p=>p.present());
+  }
 }

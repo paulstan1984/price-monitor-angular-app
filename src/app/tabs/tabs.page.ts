@@ -72,15 +72,19 @@ export class TabsPage extends BaseComponent {
                 this.router.navigate(['tabs/products']);
               }
             }]
-          }).then(a=>a.present());
-          
+          }).then(a => a.present());
+
         })
     } else {
       const alert = this.alertController.create({
         cssClass: 'my-custom-class',
         header: 'Select at least a product?',
-        buttons: [ 'Ok']
+        buttons: ['Ok']
       }).then(w => w.present());
     }
+  }
+
+  toggleTheme() {
+    document.body.classList.toggle('dark');
   }
 }

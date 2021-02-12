@@ -3,15 +3,26 @@
     <ion-title>
       Shopping List
     </ion-title>
+
+    <ion-buttons slot="end">
+      <ion-buttons slot="end">
+        <ion-button (click)="syncList()">
+          <ion-icon name="sync-outline"></ion-icon>
+        </ion-button>
+
+        <ion-button (click)="pushList()">
+          <ion-icon name="arrow-up-circle-outline"></ion-icon>
+        </ion-button>
+
+        <ion-button (click)="popList()">
+          <ion-icon name="arrow-down-circle-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>  
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Shopping List</ion-title>
-    </ion-toolbar>
-  </ion-header>
 
   <ion-button expand="block" (click)="newList()">
     <ion-icon name="newspaper-outline"></ion-icon> New List
