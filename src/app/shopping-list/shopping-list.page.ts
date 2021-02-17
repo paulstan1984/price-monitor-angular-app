@@ -4,6 +4,7 @@ import { AlertController } from '@ionic/angular';
 import { environment } from 'src/environments/environment';
 import { BaseComponent } from '../BaseComponent';
 import { ShoppingList, ShoppingListItem } from '../models/ShoppingList';
+import { PhotoService } from '../services/photo.service';
 import { ShoppingListService } from '../services/ShoppingList.service';
 
 @Component({
@@ -18,7 +19,8 @@ export class ShoppingListPage extends BaseComponent {
 
   constructor(
     private alertController: AlertController,
-    private shoppingListService: ShoppingListService) {
+    private shoppingListService: ShoppingListService,
+    private photoService: PhotoService) {
     super();
 
     this.shoppingListService.setAuthToken(environment.AuthToken);
@@ -173,5 +175,15 @@ export class ShoppingListPage extends BaseComponent {
         }
       }, 'No']
     }).then(p=>p.present());
+  }
+
+  getPrices() {
+    this.photoService.newPhoto().then(a => {
+      this.shoppingListService.recognizeImage(a, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+      .subscribe(strings => {
+        console.log(strings);
+        this.setLoading(false);
+      })
+    });
   }
 }

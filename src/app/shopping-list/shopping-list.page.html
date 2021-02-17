@@ -6,17 +6,25 @@
 
     <ion-buttons slot="end">
       <ion-buttons slot="end">
-        <ion-button (click)="syncList()">
+
+        <ion-button (click)="getPrices()" title="Get Prices">
+          <ion-icon name="images"></ion-icon> 
+        </ion-button>
+        
+
+        <ion-button (click)="syncList()" title="Sync Prices">
           <ion-icon name="sync-outline"></ion-icon>
         </ion-button>
 
-        <ion-button (click)="pushList()">
+        <ion-button (click)="pushList()" title="Push List">
           <ion-icon name="arrow-up-circle-outline"></ion-icon>
         </ion-button>
 
-        <ion-button (click)="popList()">
+        <ion-button (click)="popList()" title="Pop List">
           <ion-icon name="arrow-down-circle-outline"></ion-icon>
         </ion-button>
+
+
       </ion-buttons>  
     </ion-buttons>
   </ion-toolbar>

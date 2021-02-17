@@ -12,6 +12,7 @@ import { ServiceBase } from './ServiceBase';
 export class ShoppingListService extends ServiceBase {
 
   private ApiURL = environment.ApiURL + 'shopping-list';
+  private ApiURLRecognize = environment.ApiURL + 'recognize-invoice';
 
   constructor(http: HttpClient) { super (http); }
 
@@ -40,6 +41,23 @@ export class ShoppingListService extends ServiceBase {
       .put<ShoppingList>(url, list,  { headers: this.headers })
       .pipe(
         catchError((error: HttpErrorResponse, caught: Observable<ShoppingList>) => {
+          endCallback();
+          errorHandler(error);
+          return caught;
+        })
+      );
+  }
+
+  public recognizeImage(data: Blob, startCallback: () => void, endCallback: () => void, errorHandler: (error: HttpErrorResponse) => void): Observable<string[]> {
+
+    startCallback();
+
+    let url = this.ApiURLRecognize;
+    
+    return this.http
+      .put<string[]>(url, data,  { headers: this.headers })
+      .pipe(
+        catchError((error: HttpErrorResponse, caught: Observable<string[]>) => {
           endCallback();
           errorHandler(error);
           return caught;
