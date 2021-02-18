@@ -44,11 +44,10 @@ export class ShoppingListPage extends BaseComponent {
   }
 
   changeCheck(item: ShoppingListItem) {
-    console.log(item);
     if (item.checked && item.price > 0) {
       this.saveShoppingList();
     } else if (item.checked) {
-      const alert = this.alertController.create({
+      this.alertController.create({
         cssClass: 'my-custom-class',
         header: 'Please provide a price',
         inputs: [
@@ -178,12 +177,22 @@ export class ShoppingListPage extends BaseComponent {
   }
 
   getPrices() {
-    this.photoService.newPhoto().then(a => {
-      this.shoppingListService.recognizeImage(a, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+    this.photoService.newPhoto().then(photoData => {
+      this.shoppingListService.recognizeImage(photoData, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
       .subscribe(strings => {
-        console.log(strings);
-        this.setLoading(false);
+        this.getListPrices(strings);
       })
     });
+  }
+
+  getListPrices(strings: string[]) {
+
+    const request = { text_lines: strings, shopping_list: this.shoppingList };
+    this.shoppingListService.getListPrices(request, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+    .subscribe(list => {
+      this.setShoppingList(list);
+      this.shoppingList = this.getShoppingList();
+    })
+    this.setLoading(false);
   }
 }

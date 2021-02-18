@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { ShoppingList } from '../models/ShoppingList';
+import { GetShoppingListPricesRequest, ShoppingList } from '../models/ShoppingList';
 import { ServiceBase } from './ServiceBase';
 
 @Injectable({
@@ -13,6 +13,7 @@ export class ShoppingListService extends ServiceBase {
 
   private ApiURL = environment.ApiURL + 'shopping-list';
   private ApiURLRecognize = environment.ApiURL + 'recognize-invoice';
+  private ApiURLGetListPrices = environment.ApiURL + 'recognize-prices';
 
   constructor(http: HttpClient) { super (http); }
 
@@ -58,6 +59,23 @@ export class ShoppingListService extends ServiceBase {
       .put<string[]>(url, data,  { headers: this.headers })
       .pipe(
         catchError((error: HttpErrorResponse, caught: Observable<string[]>) => {
+          endCallback();
+          errorHandler(error);
+          return caught;
+        })
+      );
+  }
+
+  public getListPrices(getPricesRequest: GetShoppingListPricesRequest, startCallback: () => void, endCallback: () => void, errorHandler: (error: HttpErrorResponse) => void): Observable<ShoppingList> {
+
+    startCallback();
+
+    let url = this.ApiURLGetListPrices;
+    
+    return this.http
+      .put<ShoppingList>(url, getPricesRequest,  { headers: this.headers })
+      .pipe(
+        catchError((error: HttpErrorResponse, caught: Observable<ShoppingList>) => {
           endCallback();
           errorHandler(error);
           return caught;

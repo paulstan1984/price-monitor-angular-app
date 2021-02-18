@@ -9,3 +9,8 @@ export class ShoppingListItem {
     price: number;
     checked: boolean;
 }
+
+export interface GetShoppingListPricesRequest {
+    text_lines: string[];
+    shopping_list: ShoppingList;
+}

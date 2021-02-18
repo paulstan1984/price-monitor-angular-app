@@ -58,7 +58,15 @@ export class TabsPage extends BaseComponent {
     }
 
     if (prices && prices.length) {
-      this.priceService.buy(prices, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+      this.priceService.buy(prices, () => this.setLoading(true), () => this.setLoading(false), error => {
+          this.alertController.create({
+            cssClass: 'my-custom-class',
+            header: 'Error',
+            message: error.message,
+            buttons: ['Ok']
+          }).then(w => w.present());
+          this.errorHandler(error);
+        })
         .subscribe(_ => {
           this.setLoading(false);
           this.setShoppingList({ items: [] } as ShoppingList);
@@ -76,7 +84,7 @@ export class TabsPage extends BaseComponent {
 
         })
     } else {
-      const alert = this.alertController.create({
+      this.alertController.create({
         cssClass: 'my-custom-class',
         header: 'Select at least a product?',
         buttons: ['Ok']
