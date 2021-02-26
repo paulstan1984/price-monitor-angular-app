@@ -1,11 +1,13 @@
-import { ThrowStmt } from '@angular/compiler';
 import { Component } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { AlertController, IonFab, PickerController } from '@ionic/angular';
 import { environment } from 'src/environments/environment';
 import { BaseComponent } from '../BaseComponent';
 import { ShoppingList, ShoppingListItem } from '../models/ShoppingList';
 import { PhotoService } from '../services/photo.service';
 import { ShoppingListService } from '../services/ShoppingList.service';
+import { PickerColumn } from '@ionic/core';
+
+const DEFNRDIGITS = 'DEFNRDIGITS';
 
 @Component({
   selector: 'app-shopping-list',
@@ -16,14 +18,26 @@ export class ShoppingListPage extends BaseComponent {
 
   shoppingList: ShoppingList | undefined;
   showSelected = false;
+  defNrDigits: number;
 
   constructor(
     private alertController: AlertController,
     private shoppingListService: ShoppingListService,
-    private photoService: PhotoService) {
+    private photoService: PhotoService,
+    private pickerController: PickerController) {
     super();
 
     this.shoppingListService.setAuthToken(environment.AuthToken);
+
+    try {
+      this.defNrDigits = parseInt(localStorage.getItem(DEFNRDIGITS));
+      if (!this.defNrDigits) {
+        this.defNrDigits = 2;
+      }
+    }
+    catch (err) {
+      this.defNrDigits = 2;
+    }
   }
 
   ionViewDidEnter() {
@@ -123,7 +137,7 @@ export class ShoppingListPage extends BaseComponent {
           this.shoppingListService.get(() => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
             .subscribe(list => {
               list.items.forEach(item => {
-                if(!this.isInShoppingList(item.product)) {
+                if (!this.isInShoppingList(item.product)) {
                   this.addToShoppingList(item.product);
                 }
               });
@@ -134,7 +148,7 @@ export class ShoppingListPage extends BaseComponent {
             })
         }
       }, 'No']
-    }).then(p=>p.present());
+    }).then(p => p.present());
   }
 
   pushList() {
@@ -147,13 +161,13 @@ export class ShoppingListPage extends BaseComponent {
         handler: () => {
           let list = this.getShoppingList();
           this.shoppingListService.save(list, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
-          .subscribe(() => {
-            this.showMessage('Push list', 'The list was stored to server!', this.alertController);
-            this.setLoading(false);
-          })
+            .subscribe(() => {
+              this.showMessage('Push list', 'The list was stored to server!', this.alertController);
+              this.setLoading(false);
+            })
         }
       }, 'No']
-    }).then(p=>p.present());
+    }).then(p => p.present());
   }
 
   popList() {
@@ -165,23 +179,23 @@ export class ShoppingListPage extends BaseComponent {
         text: 'Yes',
         handler: () => {
           this.shoppingListService.get(() => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
-          .subscribe(list => {
-            this.setShoppingList(list);
-            this.shoppingList = this.getShoppingList();
-            this.showMessage('Pop list', 'The list was loaded from server!', this.alertController);
-            this.setLoading(false);
-          })
+            .subscribe(list => {
+              this.setShoppingList(list);
+              this.shoppingList = this.getShoppingList();
+              this.showMessage('Pop list', 'The list was loaded from server!', this.alertController);
+              this.setLoading(false);
+            })
         }
       }, 'No']
-    }).then(p=>p.present());
+    }).then(p => p.present());
   }
 
   getPrices() {
     this.photoService.newPhoto().then(photoData => {
       this.shoppingListService.recognizeImage(photoData, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
-      .subscribe(strings => {
-        this.getListPrices(strings);
-      })
+        .subscribe(strings => {
+          this.getListPrices(strings);
+        })
     });
   }
 
@@ -189,10 +203,112 @@ export class ShoppingListPage extends BaseComponent {
 
     const request = { text_lines: strings, shopping_list: this.shoppingList };
     this.shoppingListService.getListPrices(request, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
-    .subscribe(list => {
-      this.setShoppingList(list);
-      this.shoppingList = this.getShoppingList();
-    })
+      .subscribe(list => {
+        this.setShoppingList(list);
+        this.shoppingList = this.getShoppingList();
+      })
     this.setLoading(false);
+  }
+
+  getDigits() {
+
+    let digits = [];
+    for (let i = 0; i <= 9; i++) {
+      let option = { text: i.toString(), value: i };
+      digits.push(option);
+    }
+
+    return digits;
+  }
+
+  nrDigits(price) {
+
+    if (price) {
+      return (price * 100).toString().length;
+    }
+    else {
+      return this.defNrDigits;
+    }
+  }
+
+  getMultiply(nrDigits: number) {
+    let retNum = 1;
+
+    for (let i = 1; i < nrDigits; i++) {
+      retNum *= 10;
+    }
+    return retNum;
+  }
+
+  openPricePicker(item: ShoppingListItem, nrDigits: number) {
+
+    let priceValues: PickerColumn[] = [];
+
+    for (let i = 0; i < nrDigits; i++) {
+
+      let digit = 0;
+      if (item.price) {
+        let price = item.price * 100;
+        digit = parseInt(price.toString()[i]);
+      }
+
+      priceValues.push({
+        name: "Price" + i,
+        options: this.getDigits(),
+        selectedIndex: digit
+      });
+    }
+
+    this.pickerController.create({
+      columns: priceValues,
+      buttons: [
+        {
+          text: '+',
+          handler: () => {
+            this.pickerController.dismiss().then(() => {
+              nrDigits++;
+              if (item.price) {
+                item.price += this.getMultiply(nrDigits) / 100;
+              }
+
+              localStorage.setItem(DEFNRDIGITS, nrDigits.toString());
+              this.openPricePicker(item, nrDigits);
+            });
+          }
+        },
+        {
+          text: '-',
+          cssClass: nrDigits > 2 ? 'ion-show' : 'ion-hide',
+          handler: () => {
+            if (nrDigits > 2) {
+              this.pickerController.dismiss().then(() => {
+                nrDigits--;
+
+                if (item.price) {
+                  item.price = parseInt((item.price * 100).toString().substring(1)) / 100;
+                }
+
+                localStorage.setItem(DEFNRDIGITS, nrDigits.toString());
+                this.openPricePicker(item, nrDigits);
+              });
+            };
+          }
+        },
+        {
+          text: 'Confirm',
+          handler: (selected) => {
+            let price = 0;
+            let unity = 1;
+
+            for (let i = nrDigits; i--; i >= 0) {
+              price += selected['Price' + i].value * unity;
+              unity *= 10;
+            }
+
+            item.price = price / 100;
+          }
+        }
+      ]
+    }).then(p => p.present());
   }
 }

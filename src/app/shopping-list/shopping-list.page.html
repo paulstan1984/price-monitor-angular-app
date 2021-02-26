@@ -42,6 +42,7 @@
       <ion-input placeholder="Price" type="number" [(ngModel)]="item.price" (ionChange)="saveShoppingList()"></ion-input>
 
       <ion-button color="light" slot="end" (click)="remove(item)"><ion-icon name="trash-bin-outline"></ion-icon></ion-button>
+      <ion-button color="light" slot="end" (click)="openPricePicker(item, nrDigits(item.price))"><ion-icon name="pricetags-outline"></ion-icon></ion-button>
       <ion-checkbox slot="end" [(ngModel)]="item.checked" (ionChange)="saveShoppingList()"></ion-checkbox>
     </ion-item>
 
