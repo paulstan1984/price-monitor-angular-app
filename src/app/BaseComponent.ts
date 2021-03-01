@@ -20,6 +20,7 @@ export class BaseComponent {
   } as ErrorObject;
 
   dateTimeFormal = 'YYYY-MM-dd HH:mm:ss';
+  public selectedStore: number;
 
   errorHandler(error: HttpErrorResponse) {
     switch (error.status) {
@@ -166,5 +167,9 @@ export class BaseComponent {
       message: message,
       buttons: ['Ok']
     }).then(a => a.present());
+  }
+
+  updateCurrentStore(event: any) {
+    this.setCurrentStore(event.detail.value);
   }
 }

@@ -20,7 +20,6 @@ export class ProductsPage extends BaseComponent {
   public stores: Store[];
   public categories: Category[];
   public products: Product[];
-  public selectedStore: number;
   public prodName: string;
   public categorySelectorButtons: any[];
 
@@ -32,7 +31,6 @@ export class ProductsPage extends BaseComponent {
   ) {
     super();
 
-    this.selectedStore = parseInt(this.getCurrentStore());
     this.storesService.setAuthToken(environment.AuthToken);
     this.categoriesService.setAuthToken(environment.AuthToken);
     this.productsService.setAuthToken(environment.AuthToken);
@@ -42,6 +40,7 @@ export class ProductsPage extends BaseComponent {
 
   ionViewDidEnter() {
     this.loadProducts(this.prodName);
+    this.selectedStore = parseInt(this.getCurrentStore());
   }
 
   loadMetaData(){
@@ -108,10 +107,6 @@ export class ProductsPage extends BaseComponent {
   searchProducts(event: any) {
     let prodName = event.detail.value;
     this.loadProducts(prodName);
-  }
-
-  updateCurrentStore(event: any) {
-    this.setCurrentStore(event.detail.value);
   }
 
   addProduct(name: string) {

@@ -6,6 +6,8 @@ import { ShoppingList, ShoppingListItem } from '../models/ShoppingList';
 import { PhotoService } from '../services/photo.service';
 import { ShoppingListService } from '../services/ShoppingList.service';
 import { PickerColumn } from '@ionic/core';
+import { Store } from '../models/Store';
+import { StoresService } from '../services/Stores.service';
 
 const DEFNRDIGITS = 'DEFNRDIGITS';
 
@@ -19,8 +21,10 @@ export class ShoppingListPage extends BaseComponent {
   shoppingList: ShoppingList | undefined;
   showSelected = false;
   defNrDigits: number;
+  public stores: Store[];
 
   constructor(
+    private storesService: StoresService,
     private alertController: AlertController,
     private shoppingListService: ShoppingListService,
     private photoService: PhotoService,
@@ -28,7 +32,9 @@ export class ShoppingListPage extends BaseComponent {
     super();
 
     this.shoppingListService.setAuthToken(environment.AuthToken);
+    this.storesService.setAuthToken(environment.AuthToken);
 
+    this.loadStores();
     try {
       this.defNrDigits = parseInt(localStorage.getItem(DEFNRDIGITS));
       if (!this.defNrDigits) {
@@ -40,8 +46,10 @@ export class ShoppingListPage extends BaseComponent {
     }
   }
 
+
   ionViewDidEnter() {
     this.loadMetadata();
+    this.selectedStore = parseInt(this.getCurrentStore());
   }
 
   toggleShowSelected(event: any) {
@@ -55,6 +63,15 @@ export class ShoppingListPage extends BaseComponent {
 
   saveShoppingList() {
     this.setShoppingList(this.shoppingList);
+  }
+
+  loadStores() {
+    this.storesService
+      .list(() => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+      .subscribe(stores => {
+        this.setLoading(false);
+        this.stores = stores;
+      })
   }
 
   changeCheck(item: ShoppingListItem) {

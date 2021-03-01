@@ -37,15 +37,20 @@
   </ion-button>
 
   <ion-list>
-    <ion-item *ngFor="let item of shoppingList?.items" [hidden]="!(!item.checked || showSelected)">
-      <ion-label>{{item?.product?.name}}</ion-label>
-      <ion-input placeholder="Price" type="number" [(ngModel)]="item.price" (ionChange)="saveShoppingList()"></ion-input>
 
-      <ion-button color="light" slot="end" (click)="remove(item)"><ion-icon name="trash-bin-outline"></ion-icon></ion-button>
-      <ion-button color="light" slot="end" (click)="openPricePicker(item, nrDigits(item.price))"><ion-icon name="pricetags-outline"></ion-icon></ion-button>
-      <ion-checkbox slot="end" [(ngModel)]="item.checked" (ionChange)="saveShoppingList()"></ion-checkbox>
-    </ion-item>
+    <ion-item-sliding *ngFor="let item of shoppingList?.items" [hidden]="!(!item.checked || showSelected)">
+      <ion-item-options side="start">
+        <ion-item-option color="danger" (click)="remove(item)"><ion-icon name="trash-bin-outline"></ion-icon></ion-item-option>
+        <ion-item-option (click)="openPricePicker(item, nrDigits(item.price))"><ion-icon name="pricetags-outline"></ion-icon></ion-item-option>
+      </ion-item-options>
+  
+      <ion-item>
+        <ion-label> {{item?.product?.name}}</ion-label>
+        <ion-input placeholder="Price" type="number" [(ngModel)]="item.price" (ionChange)="saveShoppingList()"></ion-input>
 
+        <ion-checkbox slot="end" [(ngModel)]="item.checked" (ionChange)="saveShoppingList()"></ion-checkbox>
+      </ion-item>
+    </ion-item-sliding>
   </ion-list>
 
 </ion-content>
@@ -53,13 +58,19 @@
 <ion-footer>
   
   <ion-toolbar>
-    <ion-title size="small">
+    <ion-title size="small" style="padding-left: 15px;">
       Show selected
     </ion-title>
     <ion-buttons slot="end">
       <ion-toggle [(ngModel)]="showSelected" slot="end" (ionChange)="toggleShowSelected($event)"></ion-toggle>
     </ion-buttons>
 
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-select *ngIf="stores && stores.length>0" (ionChange)="updateCurrentStore($event)" [(ngModel)]="selectedStore">
+      <ion-select-option *ngFor="let store of stores" [value]="store.id">{{store.name}}</ion-select-option>
+    </ion-select>
     <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
   </ion-toolbar>
 
