@@ -112,7 +112,7 @@ export class BaseComponent {
     list.items.push({
       product: p,
       checked: false,
-      price: undefined
+      price: p.lastPrice
     } as ShoppingListItem);
 
     this.setShoppingList(list);
