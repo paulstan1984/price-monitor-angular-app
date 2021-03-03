@@ -257,6 +257,14 @@ export class ShoppingListPage extends BaseComponent {
     return retNum;
   }
 
+  get ShoppingListTotal(): number {
+    let price = 0;
+    if (this.shoppingList && this.shoppingList.items) {
+      this.shoppingList.items.forEach(i => price += i.price);
+    }
+    return price;
+  }
+
   openPricePicker(item: ShoppingListItem, nrDigits: number) {
 
     let priceValues: PickerColumn[] = [];
