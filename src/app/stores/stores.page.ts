@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActionSheetController, ModalController } from '@ionic/angular';
+import { ActionSheetController } from '@ionic/angular';
 import { environment } from 'src/environments/environment';
 import { BaseComponent } from '../BaseComponent';
 import { Category } from '../models/Category';
@@ -9,14 +9,13 @@ import { Store } from '../models/Store';
 import { CategoriesService } from '../services/Categories.service';
 import { ProductsService } from '../services/Products.service';
 import { StoresService } from '../services/Stores.service';
-import { BuyProduct } from './buyproduct.page';
 
 @Component({
-  selector: 'app-products',
-  templateUrl: 'products.page.html',
-  styleUrls: ['products.page.scss']
+  selector: 'app-stores',
+  templateUrl: 'stores.page.html',
+  styleUrls: ['stores.page.scss']
 })
-export class ProductsPage extends BaseComponent {
+export class StoresPage extends BaseComponent {
 
   public stores: Store[];
   public categories: Category[];
@@ -28,8 +27,7 @@ export class ProductsPage extends BaseComponent {
     private storesService: StoresService,
     private categoriesService: CategoriesService,
     private productsService: ProductsService,
-    private actionSheetController: ActionSheetController,
-    public modalController: ModalController
+    private actionSheetController: ActionSheetController
   ) {
     super();
 
@@ -111,6 +109,11 @@ export class ProductsPage extends BaseComponent {
     this.loadProducts(prodName);
   }
 
+  addProduct(name: string) {
+
+    this.selectCategoryActionSheet();
+  }
+
   saveProduct(c: Category) {
 
     let prod: Product = {
@@ -134,16 +137,11 @@ export class ProductsPage extends BaseComponent {
     await actionSheet.present();
   }
 
-  async buyPopup(prod: Product) {
-    console.log(prod);
-
-    const modal = await this.modalController.create({
-      component: BuyProduct,
-      cssClass: 'my-custom-class',
-      componentProps: {
-        product: prod
-      }
-    });
-    return await modal.present();
+  public SaveToList(checked: boolean, p: Product) {
+    if(checked) {
+      this.addToShoppingList(p);
+    } else {
+      this.removeFromShoppingList(p);
+    }
   }
 }

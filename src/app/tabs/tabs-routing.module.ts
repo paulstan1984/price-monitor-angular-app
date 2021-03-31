@@ -16,6 +16,14 @@ const routes: Routes = [
         loadChildren: () => import('../shopping-list/shopping-list.module').then(m => m.ShoppingListModule)
       },
       {
+        path: 'categories',
+        loadChildren: () => import('../categories/categories.module').then(m => m.CategoriesModule)
+      },
+      {
+        path: 'stores',
+        loadChildren: () => import('../stores/stores.module').then(m => m.StoresModule)
+      },
+      {
         path: '',
         redirectTo: '/tabs/products',
         pathMatch: 'full'
