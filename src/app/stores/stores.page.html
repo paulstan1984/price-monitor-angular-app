@@ -1,9 +1,11 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Products
-    </ion-title>
+    <ion-input type="text" placeholder="Store" [(ngModel)]="storeName"></ion-input>
     <ion-buttons slot="end">
+      <ion-button *ngIf="storeName" (click)="addStore()">
+        <ion-icon name="add-circle-outline"></ion-icon>
+      </ion-button>
+
       <ion-button (click)="loadMetaData()">
         <ion-icon name="refresh-outline"></ion-icon>
       </ion-button>
@@ -14,9 +16,12 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Products</ion-title>
-
+      <ion-input type="text" placeholder="Store" [(ngModel)]="storeName"></ion-input> 
       <ion-buttons slot="end">
+        <ion-button *ngIf="storeName" (click)="addStore()">
+          <ion-icon name="add-circle-outline"></ion-icon>
+        </ion-button>
+
         <ion-button (click)="loadMetaData()">
           <ion-icon name="refresh-outline"></ion-icon>
         </ion-button>
@@ -24,19 +29,9 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-toolbar>
-    <ion-searchbar (ionChange)="searchProducts($event)" [(ngModel)]="prodName" placeholder="Product"></ion-searchbar>
-    <ion-buttons slot="end" *ngIf="prodName && products && products.length == 0">
-			<ion-button (click) = "addProduct(prodName)">
-				<ion-icon name="add-circle-outline"></ion-icon>
-			</ion-button>
-		</ion-buttons>
-  </ion-toolbar>
-  
   <ion-list>
-    <ion-item *ngFor="let prod of products">
-      <ion-label>{{prod.name}} <span *ngIf="prod.lastPrice">{{prod.lastPrice}} lei </span> <small>/ {{prod.category.name}}</small></ion-label>
-      <ion-checkbox slot="end" (ionChange)="SaveToList($event.detail.checked, prod)" [(ngModel)]="prod.Checked"></ion-checkbox>
+    <ion-item *ngFor="let item of stores">
+      <ion-label>{{item.name}}</ion-label>
     </ion-item>
   </ion-list>
 
@@ -51,9 +46,6 @@
   </ion-label>
 
   <ion-toolbar>
-    <ion-select *ngIf="stores && stores.length>0" (ionChange)="updateCurrentStore($event)" [(ngModel)]="selectedStore">
-      <ion-select-option *ngFor="let store of stores" [value]="store.id">{{store.name}}</ion-select-option>
-    </ion-select>
     <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
   </ion-toolbar>
 

@@ -1,13 +1,8 @@
 import { Component } from '@angular/core';
-import { ActionSheetController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 import { environment } from 'src/environments/environment';
 import { BaseComponent } from '../BaseComponent';
-import { Category } from '../models/Category';
-import { Product } from '../models/Product';
-import { ProductsSearchRequest } from '../models/ProductsSearchRequest';
 import { Store } from '../models/Store';
-import { CategoriesService } from '../services/Categories.service';
-import { ProductsService } from '../services/Products.service';
 import { StoresService } from '../services/Stores.service';
 
 @Component({
@@ -18,35 +13,26 @@ import { StoresService } from '../services/Stores.service';
 export class StoresPage extends BaseComponent {
 
   public stores: Store[];
-  public categories: Category[];
-  public products: Product[];
-  public prodName: string;
-  public categorySelectorButtons: any[];
+  public storeName: string;
 
   constructor(
     private storesService: StoresService,
-    private categoriesService: CategoriesService,
-    private productsService: ProductsService,
-    private actionSheetController: ActionSheetController
+    private alertController: AlertController
   ) {
     super();
 
     this.storesService.setAuthToken(environment.AuthToken);
-    this.categoriesService.setAuthToken(environment.AuthToken);
-    this.productsService.setAuthToken(environment.AuthToken);
 
     this.loadMetaData();
   }
 
   ionViewDidEnter() {
-    this.loadProducts(this.prodName);
+    this.loadStores();
     this.selectedStore = parseInt(this.getCurrentStore());
   }
 
-  loadMetaData(){
+  loadMetaData() {
     this.loadStores();
-    this.loadCategories();
-    this.loadProducts('');
   }
 
   loadStores() {
@@ -58,90 +44,19 @@ export class StoresPage extends BaseComponent {
       })
   }
 
-  loadCategories() {
-    this.categoriesService
-      .list(() => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
-      .subscribe(categories => {
+  public addStore() {
+    this.storesService.save({ name: this.storeName } as Store, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+      .subscribe(() => {
         this.setLoading(false);
-        this.categories = categories;
-
-        this.categorySelectorButtons = [];
-        this.categories.forEach(categ => {
-          this.categorySelectorButtons.push({
-            text: categ.name,
-            icon: 'folder-outline',
-            handler: () => {
-              this.saveProduct(categ);
-            }
-          })
-        });
-
-        this.categorySelectorButtons.push({
-          text: 'Cancel',
-          icon: 'close',
-          role: 'cancel'
-        });
-      });
-  }
-
-  loadProducts(prodName: string) {
-    let searchRequest: ProductsSearchRequest = {
-      page: 1,
-      name: prodName,
-      order_by: 'name'
-    } as ProductsSearchRequest;
-
-    this.productsService
-      .search(searchRequest, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
-      .subscribe(searchResponse => {
-        this.setLoading(false);
-        this.products = searchResponse.results;
-        this.products.forEach(p => {
-          if(this.isInShoppingList(p)){
-            p.Checked = true;
-          }
-        });
+        this.loadStores();
+        this.storeName = undefined;
+        this.alertController.create({
+          cssClass: 'my-custom-class',
+          header: 'Store Added!',
+          buttons: [{
+            text: 'Ok'
+          }]
+        }).then(a => a.present());
       })
-  }
-
-  searchProducts(event: any) {
-    let prodName = event.detail.value;
-    this.loadProducts(prodName);
-  }
-
-  addProduct(name: string) {
-
-    this.selectCategoryActionSheet();
-  }
-
-  saveProduct(c: Category) {
-
-    let prod: Product = {
-      name: this.prodName,
-      category_id: c.id
-    } as Product;
-
-    this.productsService.save(prod, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
-      .subscribe(p => {
-        this.loadProducts(p.name);
-      })
-  }
-
-
-  async selectCategoryActionSheet() {
-    const actionSheet = await this.actionSheetController.create({
-      header: 'Select the category',
-      cssClass: 'my-custom-class',
-      buttons: this.categorySelectorButtons
-    });
-    await actionSheet.present();
-  }
-
-  public SaveToList(checked: boolean, p: Product) {
-    if(checked) {
-      this.addToShoppingList(p);
-    } else {
-      this.removeFromShoppingList(p);
-    }
   }
 }
