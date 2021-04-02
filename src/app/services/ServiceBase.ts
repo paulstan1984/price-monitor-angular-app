@@ -13,7 +13,7 @@ export class ServiceBase {
 
     public setAuthToken(token: string | null) {
 
-        const AuthorizationHeader = 'authorization';
+        const AuthorizationHeader = 'mobile';
 
         if (this.headers.has(AuthorizationHeader)) {
             this.headers = this.headers.set(AuthorizationHeader, '' + token);
