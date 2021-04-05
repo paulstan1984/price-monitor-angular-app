@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Injectable, Injector } from "@angular/core";
 import { NgForm } from "@angular/forms";
+import { Router } from "@angular/router";
 import { AlertController } from "@ionic/angular";
 import { Product } from "./models/Product";
 import { ShoppingList, ShoppingListItem } from "./models/ShoppingList";
@@ -22,6 +23,10 @@ export class BaseComponent {
   dateTimeFormal = 'YYYY-MM-dd HH:mm:ss';
   public selectedStore: number;
 
+  constructor(private injector: Injector) {
+
+  }
+
   errorHandler(error: HttpErrorResponse) {
     switch (error.status) {
 
@@ -30,6 +35,10 @@ export class BaseComponent {
         for (const field in error.error) {
           this.errorObj.DetailedMessages[field] = error.error[field];
         }
+        break;
+
+      case 403:
+        this.injector.get(Router).navigate(['login']);
         break;
 
       case 500:
@@ -171,5 +180,21 @@ export class BaseComponent {
 
   updateCurrentStore(event: any) {
     this.setCurrentStore(event.detail.value);
+  }
+
+  getAuthToken() {
+
+    let token = localStorage.getItem('AuthToken');
+    let router: Router = this.injector.get(Router);
+
+    if (!token) {
+      router.navigate(['login']);
+    }
+
+    return token;
+  }
+
+  setAuthToken(token: string) {
+    localStorage.setItem('AuthToken', token);
   }
 }

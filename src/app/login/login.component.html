@@ -1,0 +1,45 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title>Login</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <form #f="ngForm">
+    <div *ngIf="errorObj && errorObj.GlobalMessage" class="alert alert-danger alert-dismissible">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      {{errorObj.GlobalMessage}}
+    </div>
+
+    <div *ngIf="errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['Username']"
+      class="alert alert-danger">
+      {{errorObj.DetailedMessages['Username']}}
+    </div>
+
+    <ion-input placeholder="Username" name="username" [(ngModel)]="username"></ion-input>
+    <ion-input placeholder="Password" name="password" type="password" [(ngModel)]="password"></ion-input>
+
+    <ion-button expand="full" size="large" (click)="DoLogin(f)">
+      <ion-icon name="log-in-outline"></ion-icon> Login
+    </ion-button>
+  </form>
+</ion-content>
+
+<ion-footer>
+
+  <ion-label color="danger" *ngIf="errorObj && errorObj.GlobalMessage">
+    <p class="ion-padding-horizontal ion-text-center">
+      {{errorObj.GlobalMessage}}
+    </p>
+  </ion-label>
+
+  <ion-item>
+    <ion-label>&copy; Paul Stan 2020-{{year}}</ion-label>
+  </ion-item>
+</ion-footer>

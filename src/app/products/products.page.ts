@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { ActionSheetController, ModalController } from '@ionic/angular';
-import { environment } from 'src/environments/environment';
 import { BaseComponent } from '../BaseComponent';
 import { Category } from '../models/Category';
 import { Product } from '../models/Product';
@@ -25,17 +24,18 @@ export class ProductsPage extends BaseComponent {
   public categorySelectorButtons: any[];
 
   constructor(
+    injector:Injector,
     private storesService: StoresService,
     private categoriesService: CategoriesService,
     private productsService: ProductsService,
     private actionSheetController: ActionSheetController,
     public modalController: ModalController
   ) {
-    super();
+    super(injector);
 
-    this.storesService.setAuthToken(environment.AuthToken);
-    this.categoriesService.setAuthToken(environment.AuthToken);
-    this.productsService.setAuthToken(environment.AuthToken);
+    this.storesService.setAuthToken(this.getAuthToken());
+    this.categoriesService.setAuthToken(this.getAuthToken());
+    this.productsService.setAuthToken(this.getAuthToken());
 
     this.loadMetaData();
   }

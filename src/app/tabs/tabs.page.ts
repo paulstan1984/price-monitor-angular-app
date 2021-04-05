@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
-import { environment } from 'src/environments/environment';
 import { BaseComponent } from '../BaseComponent';
 import { Price } from '../models/Price';
 import { ShoppingList } from '../models/ShoppingList';
@@ -15,12 +14,13 @@ import { PricesService } from '../services/Prices.service';
 export class TabsPage extends BaseComponent {
 
   constructor(
+    injector:Injector,
     private alertController: AlertController,
     private priceService: PricesService,
     private router: Router) {
-    super();
+    super(injector);
 
-    this.priceService.setAuthToken(environment.AuthToken);
+    this.priceService.setAuthToken(this.getAuthToken());
   }
 
   async Buy() {

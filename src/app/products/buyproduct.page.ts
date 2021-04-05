@@ -1,6 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Injector, Input } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
-import { environment } from 'src/environments/environment';
 import { BaseComponent } from '../BaseComponent';
 import { Price } from '../models/Price';
 import { Product } from '../models/Product';
@@ -20,15 +19,16 @@ export class BuyProduct extends BaseComponent {
     public stores: Store[];
 
     constructor(
+        injector:Injector,
         private storesService: StoresService,
         private alertController: AlertController,
         private priceService: PricesService,
         public modalController: ModalController
     ) {
-        super();
+        super(injector);
 
-        this.storesService.setAuthToken(environment.AuthToken);
-        this.priceService.setAuthToken(environment.AuthToken);
+        this.storesService.setAuthToken(this.getAuthToken());
+        this.priceService.setAuthToken(this.getAuthToken());
 
         this.loadStores();
     }

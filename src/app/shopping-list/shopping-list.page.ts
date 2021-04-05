@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
-import { AlertController, IonFab, PickerController } from '@ionic/angular';
-import { environment } from 'src/environments/environment';
+import { Component, Injector } from '@angular/core';
+import { AlertController, PickerController } from '@ionic/angular';
 import { BaseComponent } from '../BaseComponent';
 import { ShoppingList, ShoppingListItem } from '../models/ShoppingList';
 import { PhotoService } from '../services/photo.service';
@@ -24,15 +23,16 @@ export class ShoppingListPage extends BaseComponent {
   public stores: Store[];
 
   constructor(
+    injector:Injector,
     private storesService: StoresService,
     private alertController: AlertController,
     private shoppingListService: ShoppingListService,
     private photoService: PhotoService,
     private pickerController: PickerController) {
-    super();
+    super(injector);
 
-    this.shoppingListService.setAuthToken(environment.AuthToken);
-    this.storesService.setAuthToken(environment.AuthToken);
+    this.shoppingListService.setAuthToken(this.getAuthToken());
+    this.storesService.setAuthToken(this.getAuthToken());
 
     this.loadStores();
     try {

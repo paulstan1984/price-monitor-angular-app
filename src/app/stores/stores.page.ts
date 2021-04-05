@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { environment } from 'src/environments/environment';
 import { BaseComponent } from '../BaseComponent';
 import { Store } from '../models/Store';
 import { StoresService } from '../services/Stores.service';
@@ -16,12 +15,13 @@ export class StoresPage extends BaseComponent {
   public storeName: string;
 
   constructor(
+    injector:Injector,
     private storesService: StoresService,
     private alertController: AlertController
   ) {
-    super();
+    super(injector);
 
-    this.storesService.setAuthToken(environment.AuthToken);
+    this.storesService.setAuthToken(this.getAuthToken());
 
     this.loadMetaData();
   }

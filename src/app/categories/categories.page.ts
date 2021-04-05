@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { environment } from 'src/environments/environment';
 import { BaseComponent } from '../BaseComponent';
 import { Category } from '../models/Category';
 import { Store } from '../models/Store';
@@ -17,12 +16,13 @@ export class CategoriesPage extends BaseComponent {
   public categoryName: string;
 
   constructor(
+    injector: Injector,
     private categoriesService: CategoriesService,
     private alertController: AlertController
   ) {
-    super();
+    super(injector);
 
-    this.categoriesService.setAuthToken(environment.AuthToken);
+    this.categoriesService.setAuthToken(this.getAuthToken());
 
     this.loadMetaData();
   }
