@@ -1,5 +1,4 @@
 <ion-header [translucent]="true">
-
   <ion-toolbar>
     <ion-searchbar (ionChange)="searchProducts($event)" [(ngModel)]="prodName" placeholder="Product"></ion-searchbar>
     <ion-buttons slot="end">
@@ -50,9 +49,6 @@
   </ion-label>
 
   <ion-toolbar>
-    <ion-select *ngIf="stores && stores.length>0" (ionChange)="updateCurrentStore($event)" [(ngModel)]="selectedStore">
-      <ion-select-option *ngFor="let store of stores" [value]="store.id">{{store.name}}</ion-select-option>
-    </ion-select>
     <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
   </ion-toolbar>
 

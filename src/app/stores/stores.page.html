@@ -30,9 +30,13 @@
   </ion-header>
 
   <ion-list>
-    <ion-item *ngFor="let item of stores">
-      <ion-label>{{item.name}}</ion-label>
-    </ion-item>
+    <ion-radio-group [(ngModel)]="selectedStore" (ionChange)="updateCurrentStore($event)">
+      <ion-item *ngFor="let item of stores">
+        <ion-label>{{item.name}}</ion-label>
+
+        <ion-radio slot="end" [value]="item.id"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
   </ion-list>
 
 </ion-content>

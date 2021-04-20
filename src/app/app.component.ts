@@ -24,4 +24,8 @@ export class AppComponent {
       this.splashScreen.hide();
     });
   }
+
+  toggleTheme() {
+    document.body.classList.toggle('dark');
+  }
 }

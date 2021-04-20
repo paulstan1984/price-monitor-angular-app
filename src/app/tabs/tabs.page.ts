@@ -1,6 +1,6 @@
 import { Component, Injector } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, MenuController } from '@ionic/angular';
 import { BaseComponent } from '../BaseComponent';
 import { Price } from '../models/Price';
 import { ShoppingList } from '../models/ShoppingList';
@@ -17,7 +17,8 @@ export class TabsPage extends BaseComponent {
     injector:Injector,
     private alertController: AlertController,
     private priceService: PricesService,
-    private router: Router) {
+    private router: Router,
+    private menuController: MenuController) {
     super(injector);
 
     this.priceService.setAuthToken(this.getAuthToken());
@@ -92,7 +93,7 @@ export class TabsPage extends BaseComponent {
     }
   }
 
-  toggleTheme() {
-    document.body.classList.toggle('dark');
+  openMenu() {  
+    this.menuController.open('first');
   }
 }
