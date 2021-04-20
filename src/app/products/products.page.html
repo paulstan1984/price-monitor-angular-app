@@ -32,10 +32,16 @@
   </ion-header>
   
   <ion-list>
-    <ion-item *ngFor="let prod of products">
-      <ion-label>{{prod.name}} <span *ngIf="prod.lastPrice">{{prod.lastPrice}} lei </span> <br/><small>{{prod.category.name}}</small></ion-label>
-      <ion-button color="primary" fill="clear" size="default" strong="true" (click)="buyPopup(prod)"><ion-icon name="cart-outline"></ion-icon></ion-button>
-    </ion-item>
+    <ion-item-sliding *ngFor="let prod of products">
+      <ion-item-options side="start">
+        <ion-item-option color="primary" (click)="edit(prod)"><ion-icon name="create-outline"></ion-icon></ion-item-option>
+      </ion-item-options>
+
+      <ion-item>
+        <ion-label>{{prod.name}} <span *ngIf="prod.lastPrice">{{prod.lastPrice}} lei </span> <br/><small>{{prod.category.name}}</small></ion-label>
+        <ion-button color="primary" fill="clear" size="default" strong="true" (click)="buyPopup(prod)"><ion-icon name="cart-outline"></ion-icon></ion-button>
+      </ion-item>
+    </ion-item-sliding>
   </ion-list>
 
 </ion-content>
