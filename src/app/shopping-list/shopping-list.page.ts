@@ -1,12 +1,13 @@
 import { Component, Injector } from '@angular/core';
-import { AlertController, PickerController } from '@ionic/angular';
+import { AlertController, ModalController, PickerController } from '@ionic/angular';
 import { BaseComponent } from '../BaseComponent';
 import { ShoppingList, ShoppingListItem } from '../models/ShoppingList';
 import { PhotoService } from '../services/photo.service';
 import { ShoppingListService } from '../services/ShoppingList.service';
-import { PickerColumn } from '@ionic/core';
 import { Store } from '../models/Store';
 import { StoresService } from '../services/Stores.service';
+import { Product } from '../models/Product';
+import { BuyProduct } from '../products/buyproduct.page';
 
 const DEFNRDIGITS = 'DEFNRDIGITS';
 
@@ -28,7 +29,7 @@ export class ShoppingListPage extends BaseComponent {
     private alertController: AlertController,
     private shoppingListService: ShoppingListService,
     private photoService: PhotoService,
-    private pickerController: PickerController) {
+    public modalController: ModalController) {
     super(injector);
 
     this.shoppingListService.setAuthToken(this.getAuthToken());
@@ -265,75 +266,18 @@ export class ShoppingListPage extends BaseComponent {
     return price;
   }
 
-  openPricePicker(item: ShoppingListItem, nrDigits: number) {
-
-    let priceValues: PickerColumn[] = [];
-
-    for (let i = 0; i < nrDigits; i++) {
-
-      let digit = 0;
-      if (item.price) {
-        let price = item.price * 100;
-        digit = parseInt(price.toString()[i]);
-      }
-
-      priceValues.push({
-        name: "Price" + i,
-        options: this.getDigits(),
-        selectedIndex: digit
-      });
-    }
-
-    this.pickerController.create({
-      columns: priceValues,
-      buttons: [
-        {
-          text: '+',
-          handler: () => {
-            this.pickerController.dismiss().then(() => {
-              nrDigits++;
-              if (item.price) {
-                item.price += this.getMultiply(nrDigits) / 100;
-              }
-
-              localStorage.setItem(DEFNRDIGITS, nrDigits.toString());
-              this.openPricePicker(item, nrDigits);
-            });
-          }
-        },
-        {
-          text: '-',
-          cssClass: nrDigits > 2 ? 'ion-show' : 'ion-hide',
-          handler: () => {
-            if (nrDigits > 2) {
-              this.pickerController.dismiss().then(() => {
-                nrDigits--;
-
-                if (item.price) {
-                  item.price = parseInt((item.price * 100).toString().substring(1)) / 100;
-                }
-
-                localStorage.setItem(DEFNRDIGITS, nrDigits.toString());
-                this.openPricePicker(item, nrDigits);
-              });
-            };
-          }
-        },
-        {
-          text: 'Confirm',
-          handler: (selected) => {
-            let price = 0;
-            let unity = 1;
-
-            for (let i = nrDigits; i--; i >= 0) {
-              price += selected['Price' + i].value * unity;
-              unity *= 10;
-            }
-
-            item.price = price / 100;
-          }
+  async buyPopup(prod: Product) {
+    const modal = await this.modalController.create({
+      component: BuyProduct,
+      cssClass: 'my-custom-class',
+      componentProps: {
+        product: prod,
+        callback: () => {
+          this.removeFromShoppingList(prod);
+          this.loadMetadata();
         }
-      ]
-    }).then(p => p.present());
+      }
+    });
+    return await modal.present();
   }
 }

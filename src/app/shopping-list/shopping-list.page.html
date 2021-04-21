@@ -5,12 +5,11 @@
     </ion-title>
 
     <ion-buttons slot="end">
-      <ion-buttons slot="end">
-
-        <ion-button (click)="getPrices()" title="Get Prices">
-          <ion-icon name="images"></ion-icon> 
-        </ion-button>
+      <ion-buttons slot="end">  
         
+        <ion-button (click)="newList()" title="New List">
+          <ion-icon name="newspaper-outline"></ion-icon> 
+        </ion-button>
 
         <ion-button (click)="syncList()" title="Sync Prices">
           <ion-icon name="sync-outline"></ion-icon>
@@ -24,52 +23,30 @@
           <ion-icon name="arrow-down-circle-outline"></ion-icon>
         </ion-button>
 
-
       </ion-buttons>  
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-
-  <ion-button expand="block" (click)="newList()">
-    <ion-icon name="newspaper-outline"></ion-icon> New List
-  </ion-button>
-
   <ion-list>
 
     <ion-item-sliding *ngFor="let item of shoppingList?.items" [hidden]="!(!item.checked || showSelected)">
       <ion-item-options side="start">
         <ion-item-option color="danger" (click)="remove(item)"><ion-icon name="trash-bin-outline"></ion-icon></ion-item-option>
-        <ion-item-option (click)="openPricePicker(item, nrDigits(item.price))"><ion-icon name="pricetags-outline"></ion-icon></ion-item-option>
       </ion-item-options>
   
       <ion-item>
-        <ion-label> {{item?.product?.name}}</ion-label>
-        <ion-input placeholder="Price" type="number" [(ngModel)]="item.price" (ionChange)="saveShoppingList()"></ion-input>
-
-        <ion-checkbox slot="end" [(ngModel)]="item.checked" (ionChange)="saveShoppingList()"></ion-checkbox>
+        <ion-label>{{item?.product?.name}} <span *ngIf="item?.product?.lastPrice">{{item?.product?.lastPrice}} lei </span> <br/><small>{{item?.product?.category?.name}}</small></ion-label>
+        <ion-button color="primary" fill="clear" size="default" strong="true" (click)="buyPopup(item?.product)"><ion-icon name="cart-outline"></ion-icon></ion-button>
       </ion-item>
     </ion-item-sliding>
   </ion-list>
 </ion-content>
 
 <ion-footer>
-  
-  <ion-toolbar>
-    <ion-title size="small" style="padding-left: 15px;">
-      Show selected
-    </ion-title>
-    <ion-buttons slot="end">
-      <ion-toggle [(ngModel)]="showSelected" slot="end" (ionChange)="toggleShowSelected($event)"></ion-toggle>
-    </ion-buttons>
-
-  </ion-toolbar>
 
   <ion-toolbar>
-    <ion-select *ngIf="stores && stores.length>0" (ionChange)="updateCurrentStore($event)" [(ngModel)]="selectedStore">
-      <ion-select-option *ngFor="let store of stores" [value]="store.id">{{store.name}}</ion-select-option>
-    </ion-select>
     <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
   </ion-toolbar>
 

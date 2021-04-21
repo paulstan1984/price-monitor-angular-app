@@ -1,3 +1,4 @@
+import { ThrowStmt } from '@angular/compiler';
 import { Component, Injector, Input } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { BaseComponent } from '../BaseComponent';
@@ -16,6 +17,9 @@ export class BuyProduct extends BaseComponent {
 
     @Input()
     public product: Product
+    @Input()
+    public callback: Function;
+
     public stores: Store[];
 
     constructor(
@@ -76,7 +80,12 @@ export class BuyProduct extends BaseComponent {
                     buttons: [{
                         text: 'Ok'
                     }]
-                }).then(a => a.present());
+                }).then(a => {
+                    a.present();
+                    if(this.callback) {
+                        this.callback();
+                    }
+                });
 
             })
     }

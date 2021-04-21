@@ -135,8 +135,6 @@ export class ProductsPage extends BaseComponent {
   }
 
   async buyPopup(prod: Product) {
-    console.log(prod);
-
     const modal = await this.modalController.create({
       component: BuyProduct,
       cssClass: 'my-custom-class',
