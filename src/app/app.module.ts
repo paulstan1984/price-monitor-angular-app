@@ -11,11 +11,15 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
 import { FormsModule } from '@angular/forms';
+import { PricesComponent } from './prices/prices.component';
+import { StatisticsComponent } from './statistics/statistics.component';
 
 @NgModule({
-  declarations: [AppComponent,
-    LoginComponent
-  ],
+  declarations: [		AppComponent,
+    LoginComponent,
+      PricesComponent,
+      StatisticsComponent
+   ],
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,
     HttpClientModule, FormsModule],
