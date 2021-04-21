@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { StoresPage } from './stores.page';
 import { StoresRoutingModule } from './stores-routing.module';
+import { EditstoreComponent } from './editstore/editstore.component';
 
 @NgModule({
   imports: [
@@ -12,6 +13,6 @@ import { StoresRoutingModule } from './stores-routing.module';
     FormsModule,
     StoresRoutingModule
   ],
-  declarations: [StoresPage]
+  declarations: [StoresPage, EditstoreComponent]
 })
 export class StoresModule {}

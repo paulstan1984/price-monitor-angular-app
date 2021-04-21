@@ -9,6 +9,7 @@ import { CategoriesService } from '../services/Categories.service';
 import { ProductsService } from '../services/Products.service';
 import { StoresService } from '../services/Stores.service';
 import { BuyProduct } from './buyproduct.page';
+import { EditproductComponent } from './editproduct/editproduct.component';
 
 @Component({
   selector: 'app-products',
@@ -24,7 +25,7 @@ export class ProductsPage extends BaseComponent {
   public categorySelectorButtons: any[];
 
   constructor(
-    injector:Injector,
+    injector: Injector,
     private storesService: StoresService,
     private categoriesService: CategoriesService,
     private productsService: ProductsService,
@@ -45,7 +46,7 @@ export class ProductsPage extends BaseComponent {
     this.selectedStore = parseInt(this.getCurrentStore());
   }
 
-  loadMetaData(){
+  loadMetaData() {
     this.loadStores();
     this.loadCategories();
     this.loadProducts('');
@@ -99,7 +100,7 @@ export class ProductsPage extends BaseComponent {
         this.setLoading(false);
         this.products = searchResponse.results;
         this.products.forEach(p => {
-          if(this.isInShoppingList(p)){
+          if (this.isInShoppingList(p)) {
             p.Checked = true;
           }
         });
@@ -140,6 +141,20 @@ export class ProductsPage extends BaseComponent {
       cssClass: 'my-custom-class',
       componentProps: {
         product: prod
+      }
+    });
+    return await modal.present();
+  }
+
+  async edit(item: Product) {
+    const modal = await this.modalController.create({
+      component: EditproductComponent,
+      cssClass: 'my-custom-class',
+      componentProps: {
+        item: item,
+        callback: () => {
+          this.loadMetaData();
+        }
       }
     });
     return await modal.present();

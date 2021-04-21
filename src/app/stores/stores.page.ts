@@ -1,8 +1,9 @@
 import { Component, Injector } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { BaseComponent } from '../BaseComponent';
 import { Store } from '../models/Store';
 import { StoresService } from '../services/Stores.service';
+import { EditstoreComponent } from './editstore/editstore.component';
 
 @Component({
   selector: 'app-stores',
@@ -17,6 +18,7 @@ export class StoresPage extends BaseComponent {
   constructor(
     injector:Injector,
     private storesService: StoresService,
+    private modalController: ModalController,
     private alertController: AlertController
   ) {
     super(injector);
@@ -58,5 +60,19 @@ export class StoresPage extends BaseComponent {
           }]
         }).then(a => a.present());
       })
+  }
+
+  async edit(item:Store) {
+    const modal = await this.modalController.create({
+      component: EditstoreComponent,
+      cssClass: 'my-custom-class',
+      componentProps: {
+        item: item,
+        callback: () => {
+          this.loadStores();
+        }
+      }
+    });
+    return await modal.present();
   }
 }

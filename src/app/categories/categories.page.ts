@@ -1,9 +1,10 @@
 import { Component, Injector } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { BaseComponent } from '../BaseComponent';
 import { Category } from '../models/Category';
 import { Store } from '../models/Store';
 import { CategoriesService } from '../services/Categories.service';
+import { EditcategoryComponent } from './editcategory/editcategory.component';
 
 @Component({
   selector: 'app-categories',
@@ -18,7 +19,8 @@ export class CategoriesPage extends BaseComponent {
   constructor(
     injector: Injector,
     private categoriesService: CategoriesService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    public modalController: ModalController
   ) {
     super(injector);
 
@@ -58,5 +60,19 @@ export class CategoriesPage extends BaseComponent {
           }]
         }).then(a => a.present());
       })
+  }
+
+  async edit(item:Category) {
+    const modal = await this.modalController.create({
+      component: EditcategoryComponent,
+      cssClass: 'my-custom-class',
+      componentProps: {
+        item: item,
+        callback: () => {
+          this.loadCategories();
+        }
+      }
+    });
+    return await modal.present();
   }
 }

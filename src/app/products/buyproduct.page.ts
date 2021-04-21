@@ -1,4 +1,3 @@
-import { ThrowStmt } from '@angular/compiler';
 import { Component, Injector, Input } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { BaseComponent } from '../BaseComponent';
