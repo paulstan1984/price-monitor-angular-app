@@ -3,7 +3,7 @@
     <ion-title>Statistics</ion-title>
     <ion-buttons slot="end">
 
-      <ion-button (click)="loadMetaData()">
+      <ion-button (click)="DoFilter()">
         <ion-icon name="refresh-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -16,13 +16,24 @@
       <ion-title>Statistics</ion-title>
       <ion-buttons slot="end">
 
-        <ion-button (click)="loadMetaData()">
+        <ion-button (click)="DoFilter()">
           <ion-icon name="refresh-outline"></ion-icon>
         </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
+  <ion-radio-group [(ngModel)]="statisticsRequest.GrouppingType" (ionChange)="DoFilter()">
+    <ion-item>
+      <ion-label>Monthly</ion-label>
+      <ion-radio value="month"></ion-radio>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Daily</ion-label>
+      <ion-radio value="day"></ion-radio>
+    </ion-item>
+  </ion-radio-group>
 
   <ngx-charts-pie-chart [results]="series" [legend]="true" [legendPosition]="below" [view]="[cart_width, cart_height]"></ngx-charts-pie-chart>
 
@@ -35,9 +46,5 @@
       {{errorObj.GlobalMessage}}
     </p>
   </ion-label>
-
-  <ion-toolbar>
-    <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
-  </ion-toolbar>
 
 </ion-footer>
