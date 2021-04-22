@@ -4,13 +4,15 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { StatisticsComponent } from './statistics.component';
 import { StatisticsRoutingModule } from './statistics-routing.module';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
   imports: [
     IonicModule,
     CommonModule,
     FormsModule,
-    StatisticsRoutingModule
+    StatisticsRoutingModule,
+    NgxChartsModule
   ],
   declarations: [StatisticsComponent],
 })
