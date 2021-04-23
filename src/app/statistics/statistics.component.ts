@@ -32,17 +32,26 @@ export class StatisticsComponent extends BaseComponent {
     this.cart_height = this.platform.height() - 350;
 
     let today = new Date();
-    this.statisticsRequest = {
-      GrouppingType: 'day',
-      StartDate: today.getFullYear() + '-' + (("0" + today.getMonth()).slice(-2)) + '-01',
-      EndDate: today.getFullYear() + '-' + (("0" + (today.getMonth() + 1)).slice(-2)) + '-' + (("0" + today.getDate()).slice(-2))
-    } as StatisticsRequest;
+
+    if(today.getMonth() > 0) {
+      this.statisticsRequest = {
+        GrouppingType: 'day',
+        StartDate: today.getFullYear() + '-' + (("0" + today.getMonth()).slice(-2)) + '-01',
+        EndDate: today.getFullYear() + '-' + (("0" + (today.getMonth() + 1)).slice(-2)) + '-' + (("0" + today.getDate()).slice(-2))
+      } as StatisticsRequest;
+    } else {
+      this.statisticsRequest = {
+        GrouppingType: 'day',
+        StartDate: (today.getFullYear() - 1) + '-12-01',
+        EndDate: today.getFullYear() + '-' + (("0" + (today.getMonth() + 1)).slice(-2)) + '-' + (("0" + today.getDate()).slice(-2))
+      } as StatisticsRequest;
+    }
      
     this.DoFilter();
   }
 
   DoFilter() {
-  
+
     this.statisticsService.getStatistics(this.statisticsRequest, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
       .subscribe(response => {
         if(this.statisticsRequest.GrouppingType != 'none') {
@@ -52,6 +61,10 @@ export class StatisticsComponent extends BaseComponent {
         }
         this.setLoading(false);
         this.series = response[0].series;
+
+        if(this.statisticsRequest.GrouppingType == 'day') {
+          this.series = this.series.slice(Math.max(0, this.series.length - 3), this.series.length);
+        }
       });
   }
 
