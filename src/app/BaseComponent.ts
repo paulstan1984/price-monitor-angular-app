@@ -20,7 +20,8 @@ export class BaseComponent {
     DetailedMessages: {}
   } as ErrorObject;
 
-  dateTimeFormal = 'YYYY-MM-dd HH:mm:ss';
+  public dateTimeFormal = 'YYYY-MM-dd HH:mm:ss';
+  public dateFormat = 'yyyy-MM-dd';
   public selectedStore: number;
 
   constructor(private injector: Injector) {
