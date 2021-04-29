@@ -38,7 +38,7 @@ export class PricesComponent extends BaseComponent {
 
   loadPrices() {
     this.pricesService
-      .search({ page: 1, order_by: 'created_at', order_by_dir: 'DESC' } as PricesSearchRequest, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+      .search({ page: 1, page_size : 200, order_by: 'created_at', order_by_dir: 'DESC' } as PricesSearchRequest, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
       .subscribe(prices => {
         this.setLoading(false);
         this.prices = prices.results;
@@ -81,6 +81,6 @@ export class PricesComponent extends BaseComponent {
         total = parseFloat(total.toString()) + parseFloat(p.amount.toString());
       }
     })
-    return total + ' Lei';
+    return total;
   }
 }

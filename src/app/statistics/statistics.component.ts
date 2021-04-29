@@ -4,6 +4,12 @@ import { BaseComponent } from '../BaseComponent';
 import { StatisticsRequest, StatisticsValue } from '../models/StatisticsRequest';
 import { StatisticsService } from '../services/statistics.service';
 
+
+enum ChartTypes {
+  Pie = 'Pie',
+  Bar = 'Bar'
+};
+
 @Component({
   selector: 'app-statistics',
   templateUrl: './statistics.component.html',
@@ -14,6 +20,8 @@ export class StatisticsComponent extends BaseComponent {
   cart_width = 400;
   cart_height = 500;
   statisticsRequest: StatisticsRequest;
+  ChartTypes = ChartTypes;
+  chartType: ChartTypes = ChartTypes.Pie;
 
   constructor(
     injector: Injector,
@@ -25,28 +33,28 @@ export class StatisticsComponent extends BaseComponent {
     this.statisticsService.setAuthToken(this.getAuthToken());
   }
 
-  series : StatisticsValue[];
+  series: StatisticsValue[];
 
   ngOnInit() {
     this.cart_width = this.platform.width();
     this.cart_height = this.platform.height() - 350;
 
     let today = new Date();
+    let StartDate = new Date();
 
-    if(today.getMonth() > 0) {
-      this.statisticsRequest = {
-        GrouppingType: 'day',
-        StartDate: today.getFullYear() + '-' + (("0" + today.getMonth()).slice(-2)) + '-01',
-        EndDate: today.getFullYear() + '-' + (("0" + (today.getMonth() + 1)).slice(-2)) + '-' + (("0" + today.getDate()).slice(-2))
-      } as StatisticsRequest;
+    if (today.getMonth() - 4 >= 0) {
+      StartDate.setMonth(today.getMonth() - 4);
     } else {
-      this.statisticsRequest = {
-        GrouppingType: 'day',
-        StartDate: (today.getFullYear() - 1) + '-12-01',
-        EndDate: today.getFullYear() + '-' + (("0" + (today.getMonth() + 1)).slice(-2)) + '-' + (("0" + today.getDate()).slice(-2))
-      } as StatisticsRequest;
+      StartDate.setMonth(12 - (today.getMonth() - 4));
+      StartDate.setFullYear(StartDate.getFullYear() - 1);
     }
-     
+
+    this.statisticsRequest = {
+      GrouppingType: 'day',
+      StartDate: StartDate.getFullYear() + '-' + (("0" + (StartDate.getMonth() + 1)).slice(-2)) + '-01',
+      EndDate: today.getFullYear() + '-' + (("0" + (today.getMonth() + 1)).slice(-2)) + '-' + (("0" + today.getDate()).slice(-2))
+    } as StatisticsRequest;
+
     this.DoFilter();
   }
 
@@ -54,7 +62,7 @@ export class StatisticsComponent extends BaseComponent {
 
     this.statisticsService.getStatistics(this.statisticsRequest, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
       .subscribe(response => {
-        if(this.statisticsRequest.GrouppingType != 'none') {
+        if (this.statisticsRequest.GrouppingType != 'none') {
           response.forEach(r => {
             r.series.forEach(s => s.name = new Date(s.name));
           })
@@ -62,8 +70,8 @@ export class StatisticsComponent extends BaseComponent {
         this.setLoading(false);
         this.series = response[0].series;
 
-        if(this.statisticsRequest.GrouppingType == 'day') {
-          this.series = this.series.slice(Math.max(0, this.series.length - 3), this.series.length);
+        if (this.statisticsRequest.GrouppingType == 'day') {
+          this.series = this.series.slice(Math.max(0, this.series.length - 10), this.series.length);
         }
       });
   }

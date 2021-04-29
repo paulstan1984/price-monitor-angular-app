@@ -36,8 +36,10 @@
       <ion-item-divider color="primary" *ngIf="isDateChanged(item.created_at | date : dateFormat)">
         <ion-label>
           {{item.created_at | date : dateFormat}}
-          :
-          {{getTotal(item.created_at | date : dateFormat)}}
+        </ion-label>
+      
+        <ion-label slot="end" class="ion-text-end">
+          {{getTotal(item.created_at | date : dateFormat) | number : '1.2-2'}} Lei&nbsp;&nbsp;
         </ion-label>
       </ion-item-divider>
       
