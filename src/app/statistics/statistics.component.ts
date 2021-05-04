@@ -100,7 +100,8 @@ export class StatisticsComponent extends BaseComponent {
           component: PricesComponent,
           cssClass: 'my-custom-class',
           componentProps: {
-            prices: prices.results
+            prices: prices.results,
+            preloaded: true
           }
         }).then(w => w.present());
       })

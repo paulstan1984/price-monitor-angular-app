@@ -17,7 +17,7 @@ export class PricesComponent extends BaseComponent  {
   public prices: Price[];
 
   @Input()
-  public modal: boolean = false;
+  public preloaded: boolean = false;
 
   constructor(
     injector: Injector,
@@ -32,7 +32,7 @@ export class PricesComponent extends BaseComponent  {
   }
 
   ionViewDidEnter() {
-    if(!this.modal) {
+    if(!this.preloaded) {
       this.loadPrices();
     }
   }
