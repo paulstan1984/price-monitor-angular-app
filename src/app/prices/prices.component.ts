@@ -70,14 +70,16 @@ export class PricesComponent extends BaseComponent  {
   }
 
   private lastDate: string = '';
-  public isDateChanged(d: string) {
-    let newDate: boolean = false;
-    if (this.lastDate == '' || this.lastDate != d) {
-      newDate = true;
-      this.lastDate = d;
-    }
+  public isDateChanged(i: number) {
+    if(i == 0) return true;
 
-    return newDate;
+    let prevDate: Date = new Date(this.prices[i - 1].created_at);
+    let date: Date = new Date(this.prices[i].created_at);
+
+    let sPrevDate = prevDate.getFullYear() + '-' + (("0" + (prevDate.getMonth() + 1)).slice(-2)) + '-' + (("0" + prevDate.getDate()).slice(-2));
+    let sDate = date.getFullYear() + '-' + (("0" + (date.getMonth() + 1)).slice(-2)) + '-' + (("0" + date.getDate()).slice(-2));
+
+    return sPrevDate != sDate;
   }
 
   getTotal(date: string) {

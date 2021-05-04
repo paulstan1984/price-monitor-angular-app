@@ -25,7 +25,7 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-list>
+  <ion-list *ngIf="prices && prices.length > 0">
     <ion-item-sliding *ngFor="let item of prices; let i = index">
       
       <ion-item-options side="start">
@@ -35,7 +35,7 @@
       </ion-item-options>
 
 
-      <ion-item-divider color="primary" *ngIf="i == 0 || isDateChanged(item.created_at | date : dateFormat)">
+      <ion-item-divider color="primary" *ngIf="isDateChanged(i)">
         <ion-label>
           {{item.created_at | date : dateFormat}}
         </ion-label>
