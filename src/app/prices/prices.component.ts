@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
-import { Component, Injector, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { Component, Injector, Input } from '@angular/core';
+import { AlertController, ModalController } from '@ionic/angular';
 import { BaseComponent } from '../BaseComponent';
 import { Price } from '../models/Price';
 import { PricesSearchRequest } from '../models/PricesSearchRequest';
@@ -11,25 +11,30 @@ import { PricesService } from '../services/Prices.service';
   templateUrl: './prices.component.html',
   styleUrls: ['./prices.component.css']
 })
-export class PricesComponent extends BaseComponent {
+export class PricesComponent extends BaseComponent  {
 
+  @Input()
   public prices: Price[];
+
+  @Input()
+  public modal: boolean = false;
 
   constructor(
     injector: Injector,
     private pricesService: PricesService,
     private alertController: AlertController,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    public modalController: ModalController
   ) {
     super(injector);
 
     this.pricesService.setAuthToken(this.getAuthToken());
-
-    this.loadMetaData();
   }
 
   ionViewDidEnter() {
-    this.loadPrices();
+    if(!this.modal) {
+      this.loadPrices();
+    }
   }
 
   public loadMetaData() {
@@ -37,10 +42,12 @@ export class PricesComponent extends BaseComponent {
   }
 
   loadPrices() {
+
     this.pricesService
-      .search({ page: 1, page_size : 200, order_by: 'created_at', order_by_dir: 'DESC' } as PricesSearchRequest, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+      .search({ page: 1, page_size : 100, order_by: 'created_at', order_by_dir: 'DESC' } as PricesSearchRequest, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
       .subscribe(prices => {
         this.setLoading(false);
+        
         this.prices = prices.results;
       })
   }
@@ -65,7 +72,7 @@ export class PricesComponent extends BaseComponent {
   private lastDate: string = '';
   public isDateChanged(d: string) {
     let newDate: boolean = false;
-    if (this.lastDate != d) {
+    if (this.lastDate == '' || this.lastDate != d) {
       newDate = true;
       this.lastDate = d;
     }
@@ -82,5 +89,11 @@ export class PricesComponent extends BaseComponent {
       }
     })
     return total;
+  }
+
+  public dismissModal() {
+    this.modalController.dismiss({
+        'dismissed': true
+    });
   }
 }
