@@ -3,7 +3,7 @@
     <ion-title>Prices</ion-title>
     <ion-buttons slot="end">
 
-      <ion-button *ngIf="!preloaded" (click)="loadMetaData()">
+      <ion-button (click)="loadMetaData()">
         <ion-icon name="refresh-outline"></ion-icon>
       </ion-button>
       <ion-button *ngIf="preloaded" (click)="dismissModal()">Close</ion-button>
@@ -17,7 +17,7 @@
       <ion-title>Prices</ion-title>
       <ion-buttons slot="end">
 
-        <ion-button *ngIf="!preloaded" (click)="loadMetaData()">
+        <ion-button (click)="loadMetaData()">
           <ion-icon name="refresh-outline"></ion-icon>
         </ion-button>
         <ion-button *ngIf="preloaded" (click)="dismissModal()">Close</ion-button>
@@ -25,7 +25,7 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-list *ngIf="prices && prices.length > 0">
+  <ion-list>
     <ion-item-sliding *ngFor="let item of prices; let i = index">
       
       <ion-item-options side="start">

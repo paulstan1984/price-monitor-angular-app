@@ -13,11 +13,13 @@ import { PricesService } from '../services/Prices.service';
 })
 export class PricesComponent extends BaseComponent  {
 
-  @Input()
   public prices: Price[];
 
   @Input()
   public preloaded: boolean = false;
+
+  @Input()
+  public date: string = '';
 
   constructor(
     injector: Injector,
@@ -32,9 +34,7 @@ export class PricesComponent extends BaseComponent  {
   }
 
   ionViewDidEnter() {
-    if(!this.preloaded) {
-      this.loadPrices();
-    }
+    this.loadPrices();
   }
 
   public loadMetaData() {
@@ -42,13 +42,19 @@ export class PricesComponent extends BaseComponent  {
   }
 
   loadPrices() {
+    let request: PricesSearchRequest;
+
+    if(this.preloaded) {
+      request = { page: 1, page_size : 100, order_by: 'created_at', order_by_dir: 'DESC', date: this.date }; 
+    } else {
+      request = { page: 1, page_size : 100, order_by: 'created_at', order_by_dir: 'DESC' };       
+    }
 
     this.pricesService
-      .search({ page: 1, page_size : 100, order_by: 'created_at', order_by_dir: 'DESC' } as PricesSearchRequest, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
-      .subscribe(prices => {
+      .search(request, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+      .subscribe(response => {
         this.setLoading(false);
-        
-        this.prices = prices.results;
+        this.prices = response.results;
       })
   }
 
@@ -69,7 +75,6 @@ export class PricesComponent extends BaseComponent  {
     }).then(a => a.present());
   }
 
-  private lastDate: string = '';
   public isDateChanged(i: number) {
     if(i == 0) return true;
 

@@ -1,10 +1,8 @@
 import { Component, Injector } from '@angular/core';
 import { ModalController, Platform } from '@ionic/angular';
 import { BaseComponent } from '../BaseComponent';
-import { PricesSearchRequest } from '../models/PricesSearchRequest';
 import { StatisticsRequest, StatisticsValue } from '../models/StatisticsRequest';
 import { PricesComponent } from '../prices/prices.component';
-import { PricesService } from '../services/Prices.service';
 import { StatisticsService } from '../services/statistics.service';
 
 
@@ -30,13 +28,11 @@ export class StatisticsComponent extends BaseComponent {
     injector: Injector,
     public platform: Platform,
     public statisticsService: StatisticsService,
-    private pricesService: PricesService,
     public modalController: ModalController
   ) {
     super(injector);
 
     this.statisticsService.setAuthToken(this.getAuthToken());
-    this.pricesService.setAuthToken(this.getAuthToken());
   }
 
   series: StatisticsValue[];
@@ -83,27 +79,20 @@ export class StatisticsComponent extends BaseComponent {
   }
 
   chartClick(e: any) {
-    let date = new Date(e.label);
+    let date = e.name;
     let formattedDate = date.getFullYear() + '-' + (("0" + (date.getMonth() + 1)).slice(-2)) + '-' + (("0" + date.getDate()).slice(-2));
 
     if(this.statisticsRequest.GrouppingType == 'month'){
       formattedDate = date.getFullYear() + '-' + (("0" + (date.getMonth() + 1)).slice(-2));
     }
 
-
-    this.pricesService
-      .search({ page: 1, page_size: 100, order_by: 'created_at', order_by_dir: 'DESC', date: formattedDate } as PricesSearchRequest, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
-      .subscribe(prices => {
-        this.setLoading(false);
-
-        this.modalController.create({
-          component: PricesComponent,
-          cssClass: 'my-custom-class',
-          componentProps: {
-            prices: prices.results,
-            preloaded: true
-          }
-        }).then(w => w.present());
-      })
+    this.modalController.create({
+      component: PricesComponent,
+      cssClass: 'my-custom-class',
+      componentProps: {
+        date: formattedDate,
+        preloaded: true
+      }
+    }).then(w => w.present());
   }
 }
