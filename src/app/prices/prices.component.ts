@@ -47,11 +47,12 @@ export class PricesComponent extends BaseComponent {
       for (let i = 0; i < this.prices.length - 1; i++) {
         let d1 = new Date(this.prices[i].created_at);
         let d2 = new Date(this.prices[i + 1].created_at);
-        if (d1.getDay() !== d2.getDay()) {
+        if (d1.getDate() !== d2.getDate()) {
           return true;
         }
       }
     }
+    
     return false;
   }
 
@@ -104,11 +105,14 @@ export class PricesComponent extends BaseComponent {
   getTotal(date: string | undefined) {
     let total: number = 0;
 
-    this.prices.forEach(p => {
-      if (date === undefined || this.datePipe.transform(p.created_at, this.dateFormat) == date) {
-        total = parseFloat(total.toString()) + parseFloat(p.amount.toString());
-      }
-    })
+    if (this.prices) {
+      this.prices.forEach(p => {
+        if (date === undefined || this.datePipe.transform(p.created_at, this.dateFormat) == date) {
+          total = parseFloat(total.toString()) + parseFloat(p.amount.toString());
+        }
+      })
+    }
+    
     return total;
   }
 
