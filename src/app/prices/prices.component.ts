@@ -47,7 +47,7 @@ export class PricesComponent extends BaseComponent {
       for (let i = 0; i < this.prices.length - 1; i++) {
         let d1 = new Date(this.prices[i].created_at);
         let d2 = new Date(this.prices[i + 1].created_at);
-        if (d1.getDay() != d2.getDay()) {
+        if (d1.getDay() !== d2.getDay()) {
           return true;
         }
       }
