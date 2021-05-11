@@ -11,7 +11,7 @@ import { PricesService } from '../services/Prices.service';
   templateUrl: './prices.component.html',
   styleUrls: ['./prices.component.css']
 })
-export class PricesComponent extends BaseComponent  {
+export class PricesComponent extends BaseComponent {
 
   public prices: Price[];
 
@@ -41,13 +41,27 @@ export class PricesComponent extends BaseComponent  {
     this.loadPrices();
   }
 
+  get Monthly(): boolean {
+
+    if (this.prices) {
+      for (let i = 0; i < this.prices.length - 1; i++) {
+        let d1 = new Date(this.prices[i].created_at);
+        let d2 = new Date(this.prices[i + 1].created_at);
+        if (d1.getDay() != d2.getDay()) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   loadPrices() {
     let request: PricesSearchRequest;
 
-    if(this.preloaded) {
-      request = { page: 1, page_size : 100, order_by: 'created_at', order_by_dir: 'DESC', date: this.date }; 
+    if (this.preloaded) {
+      request = { page: 1, page_size: 100, order_by: 'created_at', order_by_dir: 'DESC', date: this.date };
     } else {
-      request = { page: 1, page_size : 100, order_by: 'created_at', order_by_dir: 'DESC' };       
+      request = { page: 1, page_size: 100, order_by: 'created_at', order_by_dir: 'DESC' };
     }
 
     this.pricesService
@@ -76,7 +90,7 @@ export class PricesComponent extends BaseComponent  {
   }
 
   public isDateChanged(i: number) {
-    if(i == 0) return true;
+    if (i == 0) return true;
 
     let prevDate: Date = new Date(this.prices[i - 1].created_at);
     let date: Date = new Date(this.prices[i].created_at);
@@ -87,11 +101,11 @@ export class PricesComponent extends BaseComponent  {
     return sPrevDate != sDate;
   }
 
-  getTotal(date: string) {
+  getTotal(date: string | undefined) {
     let total: number = 0;
 
     this.prices.forEach(p => {
-      if (this.datePipe.transform(p.created_at, this.dateFormat) == date) {
+      if (date === undefined || this.datePipe.transform(p.created_at, this.dateFormat) == date) {
         total = parseFloat(total.toString()) + parseFloat(p.amount.toString());
       }
     })
@@ -100,7 +114,7 @@ export class PricesComponent extends BaseComponent  {
 
   public dismissModal() {
     this.modalController.dismiss({
-        'dismissed': true
+      'dismissed': true
     });
   }
 }
