@@ -3,9 +3,9 @@
     <ion-title>
       Prices
 
-      <strong *ngIf="preloaded">
+      <ion-text *ngIf="preloaded">
         {{getTotal(undefined) | number : '1.2-2'}} Lei
-      </strong>
+      </ion-text>
     </ion-title>
     <ion-buttons slot="end">
 
@@ -23,9 +23,9 @@
       <ion-title>
         Prices
 
-        <strong *ngIf="preloaded">
+        <ion-text *ngIf="preloaded">
           {{getTotal(undefined) | number : '1.2-2'}} Lei
-        </strong>
+        </ion-text>
       </ion-title>
       <ion-buttons slot="end">
 
