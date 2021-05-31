@@ -3,8 +3,8 @@
     <ion-title>
       Prices
 
-      <ion-text *ngIf="preloaded">
-        {{getTotal(undefined) | number : '1.2-2'}} Lei
+      <ion-text *ngIf="preloaded && totalAmount">
+        {{totalAmount | number : '1.2-2'}} Lei
       </ion-text>
     </ion-title>
     <ion-buttons slot="end">
@@ -23,8 +23,8 @@
       <ion-title>
         Prices
 
-        <ion-text *ngIf="preloaded">
-          {{getTotal(undefined) | number : '1.2-2'}} Lei
+        <ion-text *ngIf="preloaded && totalAmount">
+          {{totalAmount | number : '1.2-2'}} Lei
         </ion-text>
       </ion-title>
       <ion-buttons slot="end">
@@ -65,6 +65,13 @@
     </ion-item-sliding>
 
   </ion-list>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
   
 </ion-content>
 

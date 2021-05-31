@@ -79,6 +79,7 @@ export class StatisticsComponent extends BaseComponent {
   }
 
   chartClick(e: any) {
+    console.log(e);
     let date = e.name;
     let formattedDate = date.getFullYear() + '-' + (("0" + (date.getMonth() + 1)).slice(-2)) + '-' + (("0" + date.getDate()).slice(-2));
 
@@ -91,7 +92,8 @@ export class StatisticsComponent extends BaseComponent {
       cssClass: 'my-custom-class',
       componentProps: {
         date: formattedDate,
-        preloaded: true
+        preloaded: true,
+        totalAmount: e.value
       }
     }).then(w => w.present());
   }

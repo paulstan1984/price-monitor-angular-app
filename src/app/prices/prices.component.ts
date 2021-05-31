@@ -17,9 +17,15 @@ export class PricesComponent extends BaseComponent {
 
   @Input()
   public preloaded: boolean = false;
+  @Input()
+  public totalAmount: number = undefined;
 
   @Input()
   public date: string = '';
+
+  public page = 1;
+
+  
 
   constructor(
     injector: Injector,
@@ -34,11 +40,13 @@ export class PricesComponent extends BaseComponent {
   }
 
   ionViewDidEnter() {
-    this.loadPrices();
+    this.page = 1;
+    this.loadPrices(this.page, undefined);
   }
 
   public loadMetaData() {
-    this.loadPrices();
+    this.page = 1;
+    this.loadPrices(this.page, undefined);
   }
 
   get Monthly(): boolean {
@@ -56,21 +64,40 @@ export class PricesComponent extends BaseComponent {
     return false;
   }
 
-  loadPrices() {
+  loadPrices(page: number, event: any) {
     let request: PricesSearchRequest;
 
     if (this.preloaded) {
-      request = { page: 1, page_size: 200, order_by: 'created_at', order_by_dir: 'DESC', date: this.date };
+      request = { page: page, page_size: 10, order_by: 'created_at', order_by_dir: 'DESC', date: this.date };
     } else {
-      request = { page: 1, page_size: 200, order_by: 'created_at', order_by_dir: 'DESC' };
+      request = { page: page, page_size: 10, order_by: 'created_at', order_by_dir: 'DESC' };
     }
 
     this.pricesService
       .search(request, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
       .subscribe(response => {
         this.setLoading(false);
-        this.prices = response.results;
+
+        if(page == 1) {
+          this.prices = response.results;
+        }
+        else {
+          this.prices = [...this.prices, ...response.results];
+        }
+
+        if(event){
+          event.target.complete();
+
+          if(page >= response.nr_pages){
+            event.target.disabled = true;
+          }
+        }
       })
+  }
+
+  loadData(event: any) {
+    this.page++;
+    this.loadPrices(this.page, event);
   }
 
   async delete(item: Price) {
