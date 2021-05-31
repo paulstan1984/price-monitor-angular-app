@@ -60,9 +60,9 @@ export class PricesComponent extends BaseComponent {
     let request: PricesSearchRequest;
 
     if (this.preloaded) {
-      request = { page: 1, page_size: 100, order_by: 'created_at', order_by_dir: 'DESC', date: this.date };
+      request = { page: 1, page_size: 200, order_by: 'created_at', order_by_dir: 'DESC', date: this.date };
     } else {
-      request = { page: 1, page_size: 100, order_by: 'created_at', order_by_dir: 'DESC' };
+      request = { page: 1, page_size: 200, order_by: 'created_at', order_by_dir: 'DESC' };
     }
 
     this.pricesService
