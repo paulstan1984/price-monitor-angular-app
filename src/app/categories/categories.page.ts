@@ -1,5 +1,5 @@
 import { Component, Injector } from '@angular/core';
-import { AlertController, ModalController } from '@ionic/angular';
+import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { BaseComponent } from '../BaseComponent';
 import { Category } from '../models/Category';
 import { Store } from '../models/Store';
@@ -19,7 +19,7 @@ export class CategoriesPage extends BaseComponent {
   constructor(
     injector: Injector,
     private categoriesService: CategoriesService,
-    private alertController: AlertController,
+    private toastController: ToastController,
     public modalController: ModalController
   ) {
     super(injector);
@@ -37,7 +37,7 @@ export class CategoriesPage extends BaseComponent {
     this.loadCategories();
   }
 
-  loadCategories() {
+  loadCategories(categoryName: string = undefined) {
     this.categoriesService
       .list(() => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
       .subscribe(categories => {
@@ -52,13 +52,10 @@ export class CategoriesPage extends BaseComponent {
         this.setLoading(false);
         this.loadCategories();
         this.categoryName = undefined;
-        this.alertController.create({
-          cssClass: 'my-custom-class',
-          header: 'Category Added!',
-          buttons: [{
-            text: 'Ok'
-          }]
-        }).then(a => a.present());
+        this.toastController.create({
+          message: 'Category added.',
+          duration: 2000
+      }).then(t => t.present());
       })
   }
 
@@ -74,5 +71,10 @@ export class CategoriesPage extends BaseComponent {
       }
     });
     return await modal.present();
+  }
+
+  searchCategories(event: any) {
+    let categoryName = event.detail.value;
+    this.loadCategories(categoryName);
   }
 }

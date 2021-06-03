@@ -1,4 +1,3 @@
-import { Price } from "./Price";
 import { Product } from "./Product";
 import { SearchResponse } from "./SearchResponse";
 

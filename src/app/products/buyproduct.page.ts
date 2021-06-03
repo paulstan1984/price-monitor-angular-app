@@ -1,5 +1,5 @@
 import { Component, Injector, Input } from '@angular/core';
-import { AlertController, ModalController } from '@ionic/angular';
+import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { BaseComponent } from '../BaseComponent';
 import { Price } from '../models/Price';
 import { Product } from '../models/Product';
@@ -22,11 +22,12 @@ export class BuyProduct extends BaseComponent {
     public stores: Store[];
 
     constructor(
-        injector:Injector,
+        injector: Injector,
         private storesService: StoresService,
         private alertController: AlertController,
         private priceService: PricesService,
-        public modalController: ModalController
+        public modalController: ModalController,
+        public toastController: ToastController
     ) {
         super(injector);
 
@@ -73,19 +74,11 @@ export class BuyProduct extends BaseComponent {
             .subscribe(_ => {
                 this.setLoading(false);
                 this.dismissModal();
-                this.alertController.create({
-                    cssClass: 'my-custom-class',
-                    header: 'Product purchased!',
-                    buttons: [{
-                        text: 'Ok'
-                    }]
-                }).then(a => {
-                    a.present();
-                    if(this.callback) {
-                        this.callback();
-                    }
-                });
 
+                this.toastController.create({
+                    message: 'Product purchased.',
+                    duration: 2000
+                }).then(t => t.present());
             })
     }
 }

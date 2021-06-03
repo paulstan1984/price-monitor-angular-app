@@ -1,5 +1,5 @@
 import { Component, Injector } from '@angular/core';
-import { AlertController, ModalController } from '@ionic/angular';
+import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { BaseComponent } from '../BaseComponent';
 import { Store } from '../models/Store';
 import { StoresService } from '../services/Stores.service';
@@ -19,7 +19,7 @@ export class StoresPage extends BaseComponent {
     injector:Injector,
     private storesService: StoresService,
     private modalController: ModalController,
-    private alertController: AlertController
+    private toastController: ToastController
   ) {
     super(injector);
 
@@ -37,12 +37,12 @@ export class StoresPage extends BaseComponent {
     this.loadStores();
   }
 
-  loadStores() {
+  loadStores(storeName: string = undefined) {
     this.storesService
-      .list(() => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
-      .subscribe(stores => {
+      .search(storeName, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+      .subscribe(response => {
         this.setLoading(false);
-        this.stores = stores;
+        this.stores = response.results;
       })
   }
 
@@ -52,13 +52,10 @@ export class StoresPage extends BaseComponent {
         this.setLoading(false);
         this.loadStores();
         this.storeName = undefined;
-        this.alertController.create({
-          cssClass: 'my-custom-class',
-          header: 'Store Added!',
-          buttons: [{
-            text: 'Ok'
-          }]
-        }).then(a => a.present());
+        this.toastController.create({
+            message: 'Store added.',
+            duration: 2000
+        }).then(t => t.present());
       })
   }
 
@@ -74,5 +71,10 @@ export class StoresPage extends BaseComponent {
       }
     });
     return await modal.present();
+  }
+
+  searchStores(event: any) {
+    let storeName = event.detail.value;
+    this.loadStores(storeName);
   }
 }
