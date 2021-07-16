@@ -31,9 +31,6 @@
     </ion-row>
   </ion-radio-group>
 
-  <ngx-charts-pie-chart (select)="chartClick($event)" *ngIf="chartType == ChartTypes.Pie" [results]="series"
-    [legend]="true" legendPosition="below" [view]="[cart_width, cart_height]"></ngx-charts-pie-chart>
-
   <ngx-charts-bar-vertical (select)="chartClick($event)" *ngIf="chartType == ChartTypes.Bar" [results]="series"
     [legend]="true" legendPosition="below" [view]="[cart_width, cart_height]"></ngx-charts-bar-vertical>
 
