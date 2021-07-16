@@ -7,7 +7,6 @@ import { ProductsSearchRequest } from '../models/ProductsSearchRequest';
 import { Store } from '../models/Store';
 import { CategoriesService } from '../services/Categories.service';
 import { ProductsService } from '../services/Products.service';
-import { StoresService } from '../services/Stores.service';
 import { BuyProduct } from './buyproduct.page';
 import { EditproductComponent } from './editproduct/editproduct.component';
 
@@ -26,7 +25,6 @@ export class ProductsPage extends BaseComponent {
 
   constructor(
     injector: Injector,
-    private storesService: StoresService,
     private categoriesService: CategoriesService,
     private productsService: ProductsService,
     private actionSheetController: ActionSheetController,
@@ -36,7 +34,6 @@ export class ProductsPage extends BaseComponent {
   }
 
   ionViewDidEnter() {
-    this.storesService.setAuthToken(this.getAuthToken());
     this.categoriesService.setAuthToken(this.getAuthToken());
     this.productsService.setAuthToken(this.getAuthToken());
 
@@ -45,18 +42,8 @@ export class ProductsPage extends BaseComponent {
   }
 
   loadMetaData() {
-    this.loadStores();
     this.loadCategories();
     this.loadProducts('');
-  }
-
-  loadStores() {
-    this.storesService
-      .list(() => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
-      .subscribe(stores => {
-        this.setLoading(false);
-        this.stores = stores;
-      })
   }
 
   loadCategories() {

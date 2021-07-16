@@ -23,37 +23,30 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-row>
-    <ion-col>
-      <ion-radio-group [(ngModel)]="statisticsRequest.GrouppingType" (ionChange)="DoFilter()">
+  <ion-radio-group [(ngModel)]="statisticsRequest.GrouppingType" (ionChange)="DoFilter()">
+    <ion-row>
+      <ion-col>
+
         <ion-item>
           <ion-label>Monthly</ion-label>
           <ion-radio value="month"></ion-radio>
         </ion-item>
+      </ion-col>
+      <ion-col>
+
         <ion-item>
           <ion-label>Daily</ion-label>
           <ion-radio value="day"></ion-radio>
         </ion-item>
-      </ion-radio-group>
-    </ion-col>
+      </ion-col>
+    </ion-row>
+  </ion-radio-group>
 
-    <ion-col>
-      <ion-radio-group [(ngModel)]="chartType" (ionChange)="DoFilter()">
-        <ion-item>
-          <ion-label>{{ChartTypes.Pie}}</ion-label>
-          <ion-radio [value]="ChartTypes.Pie"></ion-radio>
-        </ion-item>
-        <ion-item>
-          <ion-label>{{ChartTypes.Bar}}</ion-label>
-          <ion-radio [value]="ChartTypes.Bar"></ion-radio>
-        </ion-item>
-      </ion-radio-group>
-    </ion-col>
-  </ion-row>
+  <ngx-charts-pie-chart (select)="chartClick($event)" *ngIf="chartType == ChartTypes.Pie" [results]="series"
+    [legend]="true" legendPosition="below" [view]="[cart_width, cart_height]"></ngx-charts-pie-chart>
 
-  <ngx-charts-pie-chart (select)="chartClick($event)" *ngIf="chartType == ChartTypes.Pie" [results]="series" [legend]="true" legendPosition="below" [view]="[cart_width, cart_height]"></ngx-charts-pie-chart>
-
-  <ngx-charts-bar-vertical (select)="chartClick($event)" *ngIf="chartType == ChartTypes.Bar" [results]="series" [legend]="true" legendPosition="below" [view]="[cart_width, cart_height]"></ngx-charts-bar-vertical>
+  <ngx-charts-bar-vertical (select)="chartClick($event)" *ngIf="chartType == ChartTypes.Bar" [results]="series"
+    [legend]="true" legendPosition="below" [view]="[cart_width, cart_height]"></ngx-charts-bar-vertical>
 
 </ion-content>
 

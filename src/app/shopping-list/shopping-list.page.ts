@@ -1,11 +1,10 @@
 import { Component, Injector } from '@angular/core';
-import { AlertController, ModalController, PickerController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { BaseComponent } from '../BaseComponent';
 import { ShoppingList, ShoppingListItem } from '../models/ShoppingList';
 import { PhotoService } from '../services/photo.service';
 import { ShoppingListService } from '../services/ShoppingList.service';
 import { Store } from '../models/Store';
-import { StoresService } from '../services/Stores.service';
 import { Product } from '../models/Product';
 import { BuyProduct } from '../products/buyproduct.page';
 
@@ -25,17 +24,12 @@ export class ShoppingListPage extends BaseComponent {
 
   constructor(
     injector:Injector,
-    private storesService: StoresService,
     private alertController: AlertController,
     private shoppingListService: ShoppingListService,
     private photoService: PhotoService,
     public modalController: ModalController) {
     super(injector);
 
-    this.shoppingListService.setAuthToken(this.getAuthToken());
-    this.storesService.setAuthToken(this.getAuthToken());
-
-    this.loadStores();
     try {
       this.defNrDigits = parseInt(localStorage.getItem(DEFNRDIGITS));
       if (!this.defNrDigits) {
@@ -49,6 +43,8 @@ export class ShoppingListPage extends BaseComponent {
 
 
   ionViewDidEnter() {
+    this.shoppingListService.setAuthToken(this.getAuthToken());
+
     this.loadMetadata();
     this.selectedStore = parseInt(this.getCurrentStore());
   }
@@ -64,15 +60,6 @@ export class ShoppingListPage extends BaseComponent {
 
   saveShoppingList() {
     this.setShoppingList(this.shoppingList);
-  }
-
-  loadStores() {
-    this.storesService
-      .list(() => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
-      .subscribe(stores => {
-        this.setLoading(false);
-        this.stores = stores;
-      })
   }
 
   changeCheck(item: ShoppingListItem) {

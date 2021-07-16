@@ -16,9 +16,6 @@
         <ion-label position="floating">Price</ion-label>
         <ion-input type="number" placeholder="Price" [(ngModel)]="product.lastPrice"></ion-input>
     </ion-item>
-    <ion-select *ngIf="stores && stores.length>0" (ionChange)="updateCurrentStore($event)" [(ngModel)]="selectedStore">
-        <ion-select-option *ngFor="let store of stores" [value]="store.id">{{store.name}}</ion-select-option>
-    </ion-select>
 
     <ion-button expand="full" size="large" (click)="buy()">
         <ion-icon name="cart-outline"></ion-icon> Buy

@@ -79,7 +79,6 @@ export class StatisticsComponent extends BaseComponent {
   }
 
   chartClick(e: any) {
-    console.log(e);
     let date = e.name;
     let formattedDate = date.getFullYear() + '-' + (("0" + (date.getMonth() + 1)).slice(-2)) + '-' + (("0" + date.getDate()).slice(-2));
 

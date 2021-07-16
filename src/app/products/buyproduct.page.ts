@@ -5,7 +5,6 @@ import { Price } from '../models/Price';
 import { Product } from '../models/Product';
 import { Store } from '../models/Store';
 import { PricesService } from '../services/Prices.service';
-import { StoresService } from '../services/Stores.service';
 
 @Component({
     selector: 'app-buyproduct',
@@ -19,34 +18,15 @@ export class BuyProduct extends BaseComponent {
     @Input()
     public callback: Function;
 
-    public stores: Store[];
-
     constructor(
         injector: Injector,
-        private storesService: StoresService,
         private alertController: AlertController,
         private priceService: PricesService,
         public modalController: ModalController,
         public toastController: ToastController
     ) {
         super(injector);
-
-        this.storesService.setAuthToken(this.getAuthToken());
         this.priceService.setAuthToken(this.getAuthToken());
-
-        this.loadStores();
-    }
-
-    loadStores() {
-        this.storesService
-            .list(() => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
-            .subscribe(stores => {
-                this.setLoading(false);
-                this.stores = stores;
-            })
-
-
-        this.selectedStore = parseInt(this.getCurrentStore());
     }
 
     public dismissModal() {
@@ -58,7 +38,6 @@ export class BuyProduct extends BaseComponent {
     buy() {
         let prices = [{
             product_id: this.product.id,
-            store_id: this.selectedStore,
             amount: this.product.lastPrice
         } as Price];
 
