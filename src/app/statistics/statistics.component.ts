@@ -20,7 +20,7 @@ export class StatisticsComponent extends BaseComponent {
 
   cart_width = 400;
   cart_height = 500;
-  statisticsRequest: StatisticsRequest;
+  statisticsRequest: StatisticsRequest = {} as StatisticsRequest;
   ChartTypes = ChartTypes;
   chartType: ChartTypes = ChartTypes.Bar;
 

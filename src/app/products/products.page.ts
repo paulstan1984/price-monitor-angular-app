@@ -93,8 +93,8 @@ export class ProductsPage extends BaseComponent {
   }
 
   searchProducts(event: any) {
-    let prodName = event.detail.value;
-    this.loadProducts(prodName);
+    console.log(event);
+    this.loadProducts(event.detail.value);
   }
 
   saveProduct(c: Category) {
