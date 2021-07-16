@@ -35,7 +35,7 @@ export class StatisticsComponent extends BaseComponent {
 
   series: StatisticsValue[];
 
-  ngOnInit() {
+  ionViewDidEnter() {
     this.statisticsService.setAuthToken(this.getAuthToken());
 
     this.cart_width = this.platform.width();
