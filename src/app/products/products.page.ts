@@ -33,16 +33,14 @@ export class ProductsPage extends BaseComponent {
     public modalController: ModalController
   ) {
     super(injector);
+  }
 
+  ionViewDidEnter() {
     this.storesService.setAuthToken(this.getAuthToken());
     this.categoriesService.setAuthToken(this.getAuthToken());
     this.productsService.setAuthToken(this.getAuthToken());
 
     this.loadMetaData();
-  }
-
-  ionViewDidEnter() {
-    this.loadProducts(this.prodName);
     this.selectedStore = parseInt(this.getCurrentStore());
   }
 

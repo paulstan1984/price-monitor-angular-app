@@ -25,8 +25,6 @@ export class PricesComponent extends BaseComponent {
 
   public page = 1;
 
-  
-
   constructor(
     injector: Injector,
     private pricesService: PricesService,
@@ -35,11 +33,10 @@ export class PricesComponent extends BaseComponent {
     public modalController: ModalController
   ) {
     super(injector);
-
-    this.pricesService.setAuthToken(this.getAuthToken());
   }
 
   ionViewDidEnter() {
+    this.pricesService.setAuthToken(this.getAuthToken());
     this.page = 1;
     this.loadPrices(this.page, undefined);
   }

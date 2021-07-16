@@ -22,14 +22,13 @@ export class StoresPage extends BaseComponent {
     private toastController: ToastController
   ) {
     super(injector);
-
-    this.storesService.setAuthToken(this.getAuthToken());
-
-    this.loadMetaData();
   }
 
   ionViewDidEnter() {
-    this.loadStores();
+    this.storesService.setAuthToken(this.getAuthToken());
+
+    this.loadMetaData();
+
     this.selectedStore = parseInt(this.getCurrentStore());
   }
 

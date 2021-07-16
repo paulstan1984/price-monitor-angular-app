@@ -33,6 +33,10 @@ export class AuthService {
   public getToken(): string | null {
     return localStorage.getItem(environment.PriceMonitorToken);
   }
+
+  logout() {
+    localStorage.removeItem(environment.PriceMonitorToken);
+  }
 }
 
 

@@ -31,13 +31,13 @@ export class StatisticsComponent extends BaseComponent {
     public modalController: ModalController
   ) {
     super(injector);
-
-    this.statisticsService.setAuthToken(this.getAuthToken());
   }
 
   series: StatisticsValue[];
 
   ngOnInit() {
+    this.statisticsService.setAuthToken(this.getAuthToken());
+
     this.cart_width = this.platform.width();
     this.cart_height = this.platform.height() - 350;
 

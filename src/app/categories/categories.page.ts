@@ -23,14 +23,12 @@ export class CategoriesPage extends BaseComponent {
     public modalController: ModalController
   ) {
     super(injector);
-
-    this.categoriesService.setAuthToken(this.getAuthToken());
-
-    this.loadMetaData();
   }
 
   ionViewDidEnter() {
-    this.loadCategories();
+    this.categoriesService.setAuthToken(this.getAuthToken());
+
+    this.loadMetaData();
   }
 
   loadMetaData(){
