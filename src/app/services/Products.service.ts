@@ -15,14 +15,14 @@ export class ProductsService extends ServiceBase {
 
   private ApiURL = environment.ApiURL + 'products';
 
-  constructor(http: HttpClient) { super (http); }
+  constructor(http: HttpClient) { super(http); }
 
   public list(startCallback: () => void, endCallback: () => void, errorHandler: (error: HttpErrorResponse) => void): Observable<Product[]> {
 
     startCallback();
 
     return this.http
-      .get<Product[]>(this.ApiURL,  { headers: this.headers })
+      .get<Product[]>(this.ApiURL, { headers: this.headers })
       .pipe(
         catchError((error: HttpErrorResponse, caught: Observable<Product[]>) => {
           endCallback();
@@ -47,17 +47,74 @@ export class ProductsService extends ServiceBase {
       );
   }
 
+  public localStorageProducts = 'localStorageProducts';
+
+  public localLoadProducts(name: string): Product[] {
+    const retProducts = [];
+    let products: Product[];
+
+    try {
+      products = JSON.parse(localStorage.getItem(this.localStorageProducts));
+    }
+    catch (error) {
+      products = [];
+    }
+
+    if (!products) {
+      products = [];
+    }
+
+    try {
+      products.forEach(p => {
+        if (p.name.toLowerCase().indexOf(name.toLowerCase()) !== -1) {
+          retProducts.push(p);
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
+
+    return retProducts;
+  }
+
+  public localStoreProducts(searchResponse: ProductsSearchResponse) {
+    let products: Product[];
+    try {
+      products = JSON.parse(localStorage.getItem(this.localStorageProducts));
+    }
+    catch (error) {
+      products = [];
+      console.error(error);
+    }
+
+    if (!products) {
+      products = [];
+    }
+
+    try {
+      searchResponse.results.forEach(np => {
+        if (!products.find(p => p.name.toLowerCase() == np.name.toLowerCase())) {
+          products.push(np);
+        }
+      });
+
+      localStorage.setItem(this.localStorageProducts, JSON.stringify(products));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   public save(product: Product, startCallback: () => void, endCallback: () => void, errorHandler: (error: HttpErrorResponse) => void): Observable<Product> {
 
     startCallback();
 
     let url = this.ApiURL;
-    if(product!.id > 0){
+    if (product!.id > 0) {
       url += ('/' + product.id);
     }
 
     return this.http
-      .put<Product>(url, product,  { headers: this.headers })
+      .put<Product>(url, product, { headers: this.headers })
       .pipe(
         catchError((error: HttpErrorResponse, caught: Observable<Product>) => {
           endCallback();
@@ -72,9 +129,9 @@ export class ProductsService extends ServiceBase {
     startCallback();
 
     let url = this.ApiURL + '/' + product.id;
-    
+
     return this.http
-      .delete(url,  { headers: this.headers })
+      .delete(url, { headers: this.headers })
       .pipe(
         catchError((error: HttpErrorResponse, caught: Observable<any>) => {
           endCallback();

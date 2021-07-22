@@ -73,23 +73,30 @@ export class ProductsPage extends BaseComponent {
   }
 
   loadProducts(prodName: string) {
-    let searchRequest: ProductsSearchRequest = {
-      page: 1,
-      name: prodName,
-      order_by: 'name'
-    } as ProductsSearchRequest;
 
-    this.productsService
-      .search(searchRequest, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
-      .subscribe(searchResponse => {
-        this.setLoading(false);
-        this.products = searchResponse.results;
-        this.products.forEach(p => {
-          if (this.isInShoppingList(p)) {
-            p.Checked = true;
-          }
-        });
-      })
+    this.products = this.productsService.localLoadProducts(prodName);
+
+    if (!this.products || this.products.length == 0) {
+
+      let searchRequest: ProductsSearchRequest = {
+        page: 1,
+        name: prodName,
+        order_by: 'name'
+      } as ProductsSearchRequest;
+
+      this.productsService
+        .search(searchRequest, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+        .subscribe(searchResponse => {
+          this.setLoading(false);
+          this.products = searchResponse.results;
+          this.productsService.localStoreProducts(searchResponse);
+          this.products.forEach(p => {
+            if (this.isInShoppingList(p)) {
+              p.Checked = true;
+            }
+          });
+        })
+    }
   }
 
   searchProducts(event: any) {
