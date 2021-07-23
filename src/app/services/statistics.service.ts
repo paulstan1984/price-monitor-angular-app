@@ -12,6 +12,7 @@ import { ServiceBase } from './ServiceBase';
 export class StatisticsService extends ServiceBase {
 
   private ApiURL = environment.ApiURL + 'statistics';
+  private DailyAvgURL = environment.ApiURL + 'avg-price/day';
 
   constructor(http: HttpClient) { super (http); }
 
@@ -21,6 +22,21 @@ export class StatisticsService extends ServiceBase {
 
     return this.http
       .post<StatisticsResponse[]>(this.ApiURL, request, { headers: this.headers })
+      .pipe(
+        catchError((error: HttpErrorResponse, caught: Observable<StatisticsResponse[]>) => {
+          endCallback();
+          errorHandler(error);
+          return caught;
+        })
+      );
+  }
+
+  public getDailyAvgPrices(request: StatisticsRequest, startCallback: () => void, endCallback: () => void, errorHandler: (error: HttpErrorResponse) => void): Observable<StatisticsResponse[]> {
+
+    startCallback();
+
+    return this.http
+      .post<StatisticsResponse[]>(this.DailyAvgURL, request, { headers: this.headers })
       .pipe(
         catchError((error: HttpErrorResponse, caught: Observable<StatisticsResponse[]>) => {
           endCallback();

@@ -34,6 +34,10 @@ export class StatisticsComponent extends BaseComponent {
   }
 
   series: StatisticsValue[];
+  dailyAvg: StatisticsValue[];
+  last7DaysAvgPrice: number = 0;
+  last7DaysMaxPrice: number = 0;
+  last7DaysMinPrice: number = 0;
 
   ionViewDidEnter() {
     this.statisticsService.setAuthToken(this.getAuthToken());
@@ -76,13 +80,31 @@ export class StatisticsComponent extends BaseComponent {
           this.series = this.series.slice(Math.max(0, this.series.length - 10), this.series.length);
         }
       });
+
+
+    this.statisticsService.getDailyAvgPrices(this.statisticsRequest, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+      .subscribe(response => {
+        if (this.statisticsRequest.GrouppingType != 'none') {
+          response.forEach(r => {
+            r.series.forEach(s => s.name = new Date(s.name));
+          })
+        }
+        this.setLoading(false);
+        this.dailyAvg = response[0].series;
+
+        if (this.dailyAvg && this.dailyAvg.length > 0) {
+          this.last7DaysAvgPrice = this.dailyAvg[this.dailyAvg.length - 1].value;
+          this.last7DaysMaxPrice = this.dailyAvg[this.dailyAvg.length - 1].max;
+          this.last7DaysMinPrice = this.dailyAvg[this.dailyAvg.length - 1].min;
+        }
+      });
   }
 
   chartClick(e: any) {
     let date = e.name;
     let formattedDate = date.getFullYear() + '-' + (("0" + (date.getMonth() + 1)).slice(-2)) + '-' + (("0" + date.getDate()).slice(-2));
 
-    if(this.statisticsRequest.GrouppingType == 'month'){
+    if (this.statisticsRequest.GrouppingType == 'month') {
       formattedDate = date.getFullYear() + '-' + (("0" + (date.getMonth() + 1)).slice(-2));
     }
 

@@ -15,4 +15,6 @@ export interface StatisticsResponse {
 export interface StatisticsValue {
     name: Date | string;
     value: number;
+    max: number;
+    min: number;
 }

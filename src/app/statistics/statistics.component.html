@@ -34,6 +34,55 @@
   <ngx-charts-bar-vertical (select)="chartClick($event)" *ngIf="chartType == ChartTypes.Bar" [results]="series"
     [legend]="true" legendPosition="below" [view]="[cart_width, cart_height]"></ngx-charts-bar-vertical>
 
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <div class="ion-text-center">
+          Min Price:
+        </div>
+      </ion-col>
+
+      <ion-col>
+        <div class="ion-text-center">
+          Avg Price:
+        </div>
+      </ion-col>
+
+      <ion-col>
+        <div class="ion-text-center">
+          Max Price:
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="ion-justify-content-center ion-margin-top">
+      <ion-col class="ion-justify-content-center">
+        <div class="ion-text-center">
+          <ion-badge color="primary">
+            {{last7DaysMinPrice | number : '1.2-2'}} Lei
+          </ion-badge>
+        </div>
+      </ion-col>
+
+      <ion-col class="ion-justify-content-center">
+        <div class="ion-text-center">
+          <ion-badge color="warning">
+            {{last7DaysAvgPrice | number : '1.2-2'}} Lei
+          </ion-badge>
+        </div>
+      </ion-col>
+
+      <ion-col class="ion-justify-content-center">
+        <div class="ion-text-center">
+          <ion-badge color="danger">
+            {{last7DaysMaxPrice | number : '1.2-2'}} Lei
+          </ion-badge>
+        </div>
+      </ion-col>
+    </ion-row>
+
+  </ion-grid>
 </ion-content>
 
 <ion-footer>
