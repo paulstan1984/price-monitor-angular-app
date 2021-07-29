@@ -100,7 +100,6 @@ export class ProductsPage extends BaseComponent {
   }
 
   searchProducts(event: any) {
-    console.log(event);
     this.loadProducts(event.detail.value);
   }
 
