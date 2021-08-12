@@ -4,7 +4,11 @@ import { AlertController, ModalController } from '@ionic/angular';
 import { BaseComponent } from '../BaseComponent';
 import { Price } from '../models/Price';
 import { PricesSearchRequest } from '../models/PricesSearchRequest';
+import { StatisticsValue, TimeIntervalRequest } from '../models/StatisticsRequest';
+import { getEndOfMonth } from '../models/Utils';
 import { PricesService } from '../services/Prices.service';
+import { StatisticsService } from '../services/statistics.service';
+import { TotalPricesByCategComponent } from './totalpricesbycateg.component';
 
 @Component({
   selector: 'app-prices',
@@ -25,9 +29,12 @@ export class PricesComponent extends BaseComponent {
 
   public page = 1;
 
+  categSeries: StatisticsValue[];
+
   constructor(
     injector: Injector,
     private pricesService: PricesService,
+    private statisticsService: StatisticsService,
     private alertController: AlertController,
     private datePipe: DatePipe,
     public modalController: ModalController
@@ -37,6 +44,8 @@ export class PricesComponent extends BaseComponent {
 
   ionViewDidEnter() {
     this.pricesService.setAuthToken(this.getAuthToken());
+    this.statisticsService.setAuthToken(this.getAuthToken());
+
     this.page = 1;
     this.loadPrices(this.page, undefined);
   }
@@ -144,5 +153,32 @@ export class PricesComponent extends BaseComponent {
     this.modalController.dismiss({
       'dismissed': true
     });
+  }
+
+  public loadCategStatistics() {
+
+    const request = {
+      StartDate: this.date,
+      EndDate: this.date
+    } as TimeIntervalRequest;
+
+    if(this.date && this.date.length == 7){
+      request.StartDate = this.date + '-01';
+      request.EndDate = this.date + '-' + getEndOfMonth(this.date);
+    }
+
+    this.statisticsService.getStatisticsByCategory(request, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+      .subscribe(response => {
+        this.setLoading(false);
+        this.categSeries = response[0].series;
+
+        this.modalController.create({
+          component: TotalPricesByCategComponent,
+          cssClass: 'my-custom-class',
+          componentProps: {
+            categSeries: this.categSeries
+          }
+        }).then(w => w.present());
+      });
   }
 }

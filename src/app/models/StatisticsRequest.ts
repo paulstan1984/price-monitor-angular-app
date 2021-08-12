@@ -1,8 +1,10 @@
-
-export interface StatisticsRequest {
+export interface TimeIntervalRequest {
     StartDate: Date | string | undefined | null;
     EndDate: Date | string | undefined | null;
-	ProductsIds: number[];
+}
+
+export interface StatisticsRequest extends TimeIntervalRequest{
+    ProductsIds: number[];
     StoresIds: number[];
     GrouppingType: string;
 }

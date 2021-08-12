@@ -1,0 +1,35 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Prices by category
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  
+    <ion-grid>
+        <ion-row class="ion-justify-content-center ion-margin-top">
+            <ngx-charts-pie-chart [results]="categSeries"
+            [legend]="true" legendPosition="below" [view]="[cart_width, cart_height]"></ngx-charts-pie-chart>
+        </ion-row>
+    </ion-grid>
+
+</ion-content>
+
+<ion-footer>
+
+  <ion-label color="danger" *ngIf="errorObj && errorObj.GlobalMessage">
+    <p class="ion-padding-horizontal ion-text-center">
+      {{errorObj.GlobalMessage}}
+    </p>
+  </ion-label>
+
+  <ion-toolbar>
+    <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
+  </ion-toolbar>
+
+</ion-footer>
