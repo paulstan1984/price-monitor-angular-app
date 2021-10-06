@@ -1,7 +1,9 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Prices
+      <ion-text *ngIf="!preloaded || !totalAmount">
+        Prices
+      </ion-text>
 
       <ion-text *ngIf="preloaded && totalAmount">
         {{totalAmount | number : '1.2-2'}} Lei
@@ -22,6 +24,12 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+
+  <ion-select [(ngModel)]="selectedCateg" placeholder="Category" (ionChange)="loadMetaData()">
+    <ion-select-option selected="selected" value="0">All categories</ion-select-option>
+    <ion-select-option *ngFor="let c of categories" [(value)]="c.id">{{c.name}}</ion-select-option>
+  </ion-select>
+
   <ion-list>
     <ion-item-sliding *ngFor="let item of prices; let i = index">
       

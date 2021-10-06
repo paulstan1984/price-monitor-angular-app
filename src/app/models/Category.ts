@@ -5,4 +5,5 @@ export interface Category extends EditableObject {
     name: string;
     created_at: Date;
     updated_at: Date;
-}
+    nr_products: number;
+} 

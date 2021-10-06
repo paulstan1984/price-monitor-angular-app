@@ -45,7 +45,7 @@ export class CategoriesPage extends BaseComponent {
   }
 
   public addCategory() {
-    this.categoriesService.save({ name: this.categoryName } as Store, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+    this.categoriesService.save({ name: this.categoryName } as Category, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
       .subscribe(() => {
         this.setLoading(false);
         this.loadCategories();

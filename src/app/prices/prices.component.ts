@@ -2,10 +2,12 @@ import { DatePipe } from '@angular/common';
 import { Component, Injector, Input } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { BaseComponent } from '../BaseComponent';
+import { Category } from '../models/Category';
 import { Price } from '../models/Price';
 import { PricesSearchRequest } from '../models/PricesSearchRequest';
 import { StatisticsValue, TimeIntervalRequest } from '../models/StatisticsRequest';
 import { getEndOfMonth } from '../models/Utils';
+import { CategoriesService } from '../services/Categories.service';
 import { PricesService } from '../services/Prices.service';
 import { StatisticsService } from '../services/statistics.service';
 import { TotalPricesByCategComponent } from './totalpricesbycateg.component';
@@ -31,9 +33,13 @@ export class PricesComponent extends BaseComponent {
 
   categSeries: StatisticsValue[];
 
+  public categories: Category[];
+  selectedCateg: number = 0;
+
   constructor(
     injector: Injector,
     private pricesService: PricesService,
+    private categoriesService: CategoriesService,
     private statisticsService: StatisticsService,
     private alertController: AlertController,
     private datePipe: DatePipe,
@@ -45,6 +51,13 @@ export class PricesComponent extends BaseComponent {
   ionViewDidEnter() {
     this.pricesService.setAuthToken(this.getAuthToken());
     this.statisticsService.setAuthToken(this.getAuthToken());
+    this.categoriesService.setAuthToken(this.getAuthToken());
+
+    this.categoriesService
+      .list(() => { }, () => { }, error => this.errorHandler(error))
+      .subscribe(categories => {
+        this.categories = categories;
+      });
 
     this.page = 1;
     this.loadPrices(this.page, undefined);
@@ -66,17 +79,22 @@ export class PricesComponent extends BaseComponent {
         }
       }
     }
-    
+
     return false;
   }
 
   loadPrices(page: number, event: any) {
+
     let request: PricesSearchRequest;
 
     if (this.preloaded) {
-      request = { page: page, page_size: 10, order_by: 'created_at', order_by_dir: 'DESC', date: this.date };
+      request = { page: page, page_size: 10, order_by: 'created_at', order_by_dir: 'DESC', date: this.date, category_ids: [this.selectedCateg] };
     } else {
-      request = { page: page, page_size: 10, order_by: 'created_at', order_by_dir: 'DESC' };
+      request = { page: page, page_size: 10, order_by: 'created_at', order_by_dir: 'DESC', category_ids: [this.selectedCateg] };
+    }
+
+    if (this.selectedCateg == 0) {
+      delete (request.category_ids);
     }
 
     this.pricesService
@@ -84,17 +102,25 @@ export class PricesComponent extends BaseComponent {
       .subscribe(response => {
         this.setLoading(false);
 
-        if(page == 1) {
+        if (page == 1) {
+          this.totalAmount = 0;
+        }
+
+        response.results.forEach(p => {
+          this.totalAmount = parseFloat(this.totalAmount.toString()) + parseFloat(p.amount.toString());
+        });
+
+        if (page == 1) {
           this.prices = response.results;
         }
         else {
           this.prices = [...this.prices, ...response.results];
         }
 
-        if(event){
+        if (event) {
           event.target.complete();
 
-          if(page >= response.nr_pages){
+          if (page >= response.nr_pages) {
             event.target.disabled = true;
           }
         }
@@ -145,7 +171,7 @@ export class PricesComponent extends BaseComponent {
         }
       })
     }
-    
+
     return total;
   }
 
@@ -162,7 +188,7 @@ export class PricesComponent extends BaseComponent {
       EndDate: this.date
     } as TimeIntervalRequest;
 
-    if(this.date && this.date.length == 7){
+    if (this.date && this.date.length == 7) {
       request.StartDate = this.date + '-01';
       request.EndDate = this.date + '-' + getEndOfMonth(this.date);
     }
