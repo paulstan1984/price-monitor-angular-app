@@ -102,13 +102,15 @@ export class PricesComponent extends BaseComponent {
       .subscribe(response => {
         this.setLoading(false);
 
-        if (page == 1) {
-          this.totalAmount = 0;
-        }
+        if (!this.preloaded) {
+          if (page == 1) {
+            this.totalAmount = 0;
+          }
 
-        response.results.forEach(p => {
-          this.totalAmount = parseFloat(this.totalAmount.toString()) + parseFloat(p.amount.toString());
-        });
+          response.results.forEach(p => {
+            this.totalAmount = parseFloat(this.totalAmount.toString()) + parseFloat(p.amount.toString());
+          });
+        }
 
         if (page == 1) {
           this.prices = response.results;

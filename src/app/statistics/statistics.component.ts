@@ -51,8 +51,10 @@ export class StatisticsComponent extends BaseComponent {
     if (today.getMonth() - 4 >= 0) {
       StartDate.setMonth(today.getMonth() - 4);
     } else {
-      StartDate.setMonth(12 - (today.getMonth() - 4));
       StartDate.setFullYear(StartDate.getFullYear() - 1);
+      StartDate.setMonth(12 - 4 + today.getMonth());
+
+      console.log(StartDate);
     }
 
     this.statisticsRequest = {

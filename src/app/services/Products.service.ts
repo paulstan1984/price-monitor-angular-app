@@ -51,6 +51,8 @@ export class ProductsService extends ServiceBase {
 
   public localLoadProducts(name: string): Product[] {
     const retProducts = [];
+    return retProducts;
+    
     let products: Product[];
 
     try {

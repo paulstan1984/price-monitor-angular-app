@@ -20,6 +20,7 @@ export class ProductsPage extends BaseComponent {
   public stores: Store[];
   public categories: Category[];
   public products: Product[];
+  public productsGrid: Product[][];
   public prodName: string;
   public categorySelectorButtons: any[];
 
@@ -75,28 +76,47 @@ export class ProductsPage extends BaseComponent {
   loadProducts(prodName: string) {
 
     this.products = this.productsService.localLoadProducts(prodName);
+    this.loadProductsGrid();
 
-    if (!this.products || this.products.length == 0) {
+    let searchRequest: ProductsSearchRequest = {
+      page: 1,
+      name: prodName,
+      order_by: 'name'
+    } as ProductsSearchRequest;
 
-      let searchRequest: ProductsSearchRequest = {
-        page: 1,
-        name: prodName,
-        order_by: 'name'
-      } as ProductsSearchRequest;
+    this.productsService
+      .search(searchRequest, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+      .subscribe(searchResponse => {
+        this.setLoading(false);
+        this.products = searchResponse.results;
+        this.productsService.localStoreProducts(searchResponse);
+      })
+  }
 
-      this.productsService
-        .search(searchRequest, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
-        .subscribe(searchResponse => {
-          this.setLoading(false);
-          this.products = searchResponse.results;
-          this.productsService.localStoreProducts(searchResponse);
-          this.products.forEach(p => {
-            if (this.isInShoppingList(p)) {
-              p.Checked = true;
-            }
-          });
-        })
-    }
+  loadProductsGrid() {
+    let rIndex = 0;
+    let cIndex = 0;
+    this.productsGrid = [[]];
+
+    this.productsService.list(() => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+    .subscribe(searchResponse => {
+      this.setLoading(false);
+      let products = searchResponse;
+      
+      products.forEach((p, i) => {
+        if(i>19) return;
+        this.productsGrid[rIndex].push(p);
+        cIndex++;
+        if (cIndex >= 4) {
+          this.productsGrid.push([]);
+          cIndex = 0;
+          rIndex++;
+        }
+      });
+
+      console.log(this.productsGrid);
+    });
+
   }
 
   searchProducts(event: any) {

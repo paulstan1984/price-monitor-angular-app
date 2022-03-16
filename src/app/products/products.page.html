@@ -1,30 +1,53 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-searchbar debounce="1000" (ionChange)="searchProducts($event)" [(ngModel)]="prodName" placeholder="Product"></ion-searchbar>
+    <ion-searchbar debounce="1000" (ionChange)="searchProducts($event)" [(ngModel)]="prodName" placeholder="Product">
+    </ion-searchbar>
     <ion-buttons slot="end">
-			<ion-button (click) = "selectCategoryActionSheet()" *ngIf="prodName">
-				<ion-icon name="add-circle-outline"></ion-icon>
-			</ion-button>
+      <ion-button (click)="selectCategoryActionSheet()" *ngIf="prodName">
+        <ion-icon name="add-circle-outline"></ion-icon>
+      </ion-button>
       <ion-button (click)="loadMetaData()">
         <ion-icon name="refresh-outline"></ion-icon>
       </ion-button>
-		</ion-buttons>
+    </ion-buttons>
   </ion-toolbar>
 
 </ion-header>
 
 <ion-content [fullscreen]="true">
- 
+  <ion-grid>
+    <ion-row *ngFor="let prodRow of productsGrid" style="border-bottom: solid 1px #ababab;">
+      <ion-col *ngFor="let prod of prodRow" style="text-align: center;">
+        <ion-label>
+          {{prod.name}}
+          <br /> <span *ngIf="prod.lastPrice">{{prod.lastPrice}} lei </span>
+        </ion-label>
+        <hr />
+        <ion-button color="primary" fill="clear" size="default" strong="true" (click)="buyPopup(prod)">
+          <ion-icon name="cart-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
   <ion-list>
     <ion-item-sliding *ngFor="let prod of products">
       <ion-item-options side="start">
-        <ion-item-option color="light" (click)="edit(prod)"><ion-icon name="create-outline"></ion-icon></ion-item-option>
-        <ion-item-option color="light" (click)="addToShoppingList(prod)"><ion-icon name="cart-outline"></ion-icon></ion-item-option>
+        <ion-item-option color="light" (click)="edit(prod)">
+          <ion-icon name="create-outline"></ion-icon>
+        </ion-item-option>
+        <ion-item-option color="light" (click)="addToShoppingList(prod)">
+          <ion-icon name="cart-outline"></ion-icon>
+        </ion-item-option>
       </ion-item-options>
 
       <ion-item>
-        <ion-label>{{prod.name}} <span *ngIf="prod.lastPrice">{{prod.lastPrice}} lei </span> <br/><small>{{prod.category.name}}</small></ion-label>
-        <ion-button color="primary" fill="clear" size="default" strong="true" (click)="buyPopup(prod)"><ion-icon name="cart-outline"></ion-icon></ion-button>
+        <ion-label>{{prod.name}} <span *ngIf="prod.lastPrice">{{prod.lastPrice}} lei </span>
+          <br /><small>{{prod.category.name}}</small>
+        </ion-label>
+        <ion-button color="primary" fill="clear" size="default" strong="true" (click)="buyPopup(prod)">
+          <ion-icon name="cart-outline"></ion-icon>
+        </ion-button>
       </ion-item>
     </ion-item-sliding>
   </ion-list>
